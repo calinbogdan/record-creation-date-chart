@@ -25,3 +25,7 @@ code {
   stroke-opacity: 1;
   stroke-width: 2;
 }
+
+.grid-rectangle {
+  opacity: 0.3;
+}

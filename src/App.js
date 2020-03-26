@@ -1,28 +1,13 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import { results as healthRecords } from "./assets/records";
 import { results as institutes } from "./assets/institutes";
-import { extent, group } from "d3-array";
-import {
-  axisBottom,
-  axisLeft,
-  axisRight,
-  scaleTime,
-  scaleLinear,
-  area,
-  utcParse,
-  select
-} from "d3";
+import { RecordCreationChart } from './components/RecordCreationChart';
 
-const CHART_HEIGHT = 400;
+const CHART_HEIGHT = 600;
 const CHART_WIDTH = 800;
 
-const parseTime = utcParse("%d %b %Y");
-
-const healthRecordsCreationDates = healthRecords
-  .map(healthRecord => parseTime(healthRecord.createdon));
-
-// STACKOVERFLOW MADNESSSSSSSSSSSS
+// STACKOVERFLOW COLOR MADNESSSSSSSSSSSS
 
 var getRandomColor = (function () {
   var golden_ratio_conjugate = 0.618033988749895;
@@ -66,118 +51,102 @@ for (let i = 0; i < 15; i++) {
 
 // END OF MADNESSSSSSSSSSSSSS
 
-const minMaxDates = extent(healthRecordsCreationDates);
-
-const recordsPerDay = Array.from(group(healthRecords, healthRecord => healthRecord.createdon))
-  .sort(([firstDate], [secondDate]) => parseTime(firstDate).getTime() - parseTime(secondDate).getTime());
-
-const recordsPerDayPerInstitute = Array.from(group(healthRecords, healthRecord => healthRecord.institute_id, healthRecord => healthRecord.createdon))
-  .map(([instituteId, recsPerDay]) => ({
-    instituteId,
-    numOfRecordsPerDay: Array.from(recsPerDay)
-      .sort(([firstDate], [secondDate]) => parseTime(firstDate).getTime() - parseTime(secondDate).getTime())
-      .map(([day, records]) => ({ day, numberOfRecords: records.length }))
-  }));
 
 
-console.log(recordsPerDayPerInstitute);
+// this should be the basic input
+// const recordsPerDayPerInstitute = Array.from(group(healthRecords, healthRecord => healthRecord.institute_id, healthRecord => healthRecord.createdon))
+//   .map(([instituteId, recsPerDay]) => ({
+//     instituteId,
+//     numOfRecordsPerDay: Array.from(recsPerDay)
+//       .sort(([firstDate], [secondDate]) => parseTime(firstDate).getTime() - parseTime(secondDate).getTime())
+//       .map(([day, records]) => ({ day, numberOfRecords: records.length }))
+//   }));
 
-const numberOfRecordsPerDay = recordsPerDay
-  .map(([day, records]) => ({ day, numberOfRecords: records.length }));
-
-const minMaxRecords = extent(numberOfRecordsPerDay.map(({ numberOfRecords }) => numberOfRecords));
-
-const recordsTimeDomain = scaleTime().domain(minMaxDates);
-const recordsNumberDomain = scaleLinear().domain(minMaxRecords);
-
-const NUMBER_OF_TICKS = 6;
 
 // CANVAS COMPONENT
-const Canvas = ({ height, width, doubleOfPadding }) => {
-  const yAxisRef = useRef();
-  const xAxisRef = useRef();
+// const Canvas = ({ height, width, doubleOfPadding }) => {
+//   const yAxisRef = useRef();
+//   const xAxisRef = useRef();
 
-  const yGridRef = useRef();
-  const xGridRef = useRef();
+//   const yGridRef = useRef();
+//   const xGridRef = useRef();
 
-  const recordsNumberScale = recordsNumberDomain.range([height - doubleOfPadding, 0]);
-  const recordsTimeScale = recordsTimeDomain.range([0, width - doubleOfPadding]);
+//   const recordsNumberScale = recordsNumberDomain.range([height - doubleOfPadding, 0]);
+//   const recordsTimeScale = recordsTimeDomain.range([0, width - doubleOfPadding]);
 
-  const areaGen = area()
-    .x(recordDay => recordsTimeScale(parseTime(recordDay.day)))
-    .y0(height - doubleOfPadding)
-    .y1(record => recordsNumberScale(record.numberOfRecords));
+//   const areaGen = area()
+//     .x(recordDay => recordsTimeScale(parseTime(recordDay.day)))
+//     .y0(height - doubleOfPadding)
+//     .y1(record => recordsNumberScale(record.numberOfRecords));
 
+//   useEffect(() => {
+//     select(yAxisRef.current).call(
+//       axisLeft(recordsNumberScale)
+//         .ticks(NUMBER_OF_TICKS)
+//         .tickSize(5));
 
-  useEffect(() => {
-    select(yAxisRef.current).call(
-      axisLeft(recordsNumberScale)
-        .ticks(NUMBER_OF_TICKS)
-        .tickSize(5));
+//     select(xAxisRef.current)
+//       .call(
+//         axisBottom(recordsTimeScale)
+//           .ticks(NUMBER_OF_TICKS)
+//           .tickSize(5));
 
-    select(xAxisRef.current)
-      .call(
-        axisBottom(recordsTimeScale)
-          .ticks(NUMBER_OF_TICKS)
-          .tickSize(5));
+//     select(yGridRef.current).call(
+//       axisRight(recordsNumberDomain.range([0, height - doubleOfPadding]))
+//         .ticks(NUMBER_OF_TICKS)
+//         .tickFormat("")
+//         .tickSize(width - doubleOfPadding));
 
-    select(yGridRef.current).call(
-      axisRight(recordsNumberDomain.range([0, height - doubleOfPadding]))
-        .ticks(NUMBER_OF_TICKS)
-        .tickFormat("")
-        .tickSize(width - doubleOfPadding));
+//     select(xGridRef.current).call(
+//       axisBottom(recordsTimeDomain.range([0, width - doubleOfPadding]))
+//         .ticks(NUMBER_OF_TICKS)
+//         .tickFormat("")
+//         .tickSize(height - doubleOfPadding));
+//   });
 
-    select(xGridRef.current).call(
-      axisBottom(recordsTimeDomain.range([0, width - doubleOfPadding]))
-        .ticks(NUMBER_OF_TICKS)
-        .tickFormat("")
-        .tickSize(height - doubleOfPadding));
-  });
-
-  return <svg width={width} height={height}>
-    <g style={{ transform: `translate(${doubleOfPadding / 2}px, ${doubleOfPadding / 2}px)` }}>
-      <g className="grid" ref={yGridRef} />
-      <g className="grid" ref={xGridRef} />
-      <g ref={yAxisRef}></g>
-      <g style={{ transform: `translateY(${height - doubleOfPadding}px)` }} ref={xAxisRef}></g>
-      <svg width={width - doubleOfPadding} height={height - doubleOfPadding}>
-        {recordsPerDayPerInstitute.map((institute, index) =>
-          <InstituteRecordCreationDateChart
-            key={index}
-            areaGen={areaGen}
-            recordsPerDayArray={institute.numOfRecordsPerDay}
-            opacity={1 / institutes.length} />)}
-      </svg>
-    </g>
-  </svg>;
-}
+//   return <svg width={width} height={height}>
+//     <g style={{ transform: `translate(${doubleOfPadding / 2}px, ${doubleOfPadding / 2}px)` }}>
+//       <g className="grid" ref={yGridRef} />
+//       <g className="grid" ref={xGridRef} />
+//       <g ref={yAxisRef}></g>
+//       <g style={{ transform: `translateY(${height - doubleOfPadding}px)` }} ref={xAxisRef}></g>
+//       <svg width={width - doubleOfPadding} height={height - doubleOfPadding}>
+//         {recordsPerDayPerInstitute.map((institute, index) =>
+//           <InstituteRecordCreationDateChart
+//             key={index}
+//             areaGen={areaGen}
+//             recordsPerDayArray={institute.numOfRecordsPerDay}
+//             opacity={1 / institutes.length} />)}
+//       </svg>
+//     </g>
+//   </svg>;
+// }
 
 const InstituteRecordCreationDateChart = ({ recordsPerDayArray, areaGen, opacity }) => {
   const color = getRandomColor();
   return <g>
     <path
       d={areaGen(recordsPerDayArray)}
-      style={{ 
+      style={{
         fill: color,
-        opacity
+        fillOpacity: 0.5
       }} />
     <path
-      className="line-chart" 
+      className="line-chart"
       d={areaGen.lineY1()(recordsPerDayArray)}
       style={{ stroke: color }} />
   </g>
 };
 
 function App() {
-  return (
-    <div className="App">
-      <Canvas
-        height={CHART_HEIGHT}
-        width={CHART_WIDTH}
-        doubleOfPadding={50}
-        records={healthRecords} />
-    </div>
-  );
+  return <div>
+    <RecordCreationChart 
+      height={CHART_HEIGHT}
+      width={CHART_WIDTH}
+      padding={25}
+      healthRecords={healthRecords}
+      institutesIds={institutes.map(i => i.instituteId)}/>
+  </div>
 }
 
 export default App;
