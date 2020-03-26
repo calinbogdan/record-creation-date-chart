@@ -11,3 +11,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.grid > path {
+  stroke: gainsboro;
+}
+.grid .tick > line {
+  stroke: gainsboro;
+}
+
+.area-chart {
+  opacity: 0.2;
+}
+
+.line-chart {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 1;
+  stroke-width: 2;
+}
