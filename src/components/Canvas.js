@@ -3,7 +3,7 @@ import { select, axisBottom, axisLeft } from 'd3';
 import { useTimeScale, useRecordsScale } from '../healthRecordsContext';
 import GridRectangle from "./GridRectangle";
 
-const TICKS_NUMBER = 5;
+const TICKS_NUMBER = 5; // default value
 
 const Canvas = ({ height, width, padding }) => {
   const innerHeight = height - 2 * padding;
@@ -18,7 +18,7 @@ const Canvas = ({ height, width, padding }) => {
   useEffect(() => {
     select(yAxisRef.current).call(
       axisLeft(recordsScale)
-        .ticks(TICKS_NUMBER)
+        // .ticks(TICKS_NUMBER)
         .tickSize(5)
     );
   }, [innerHeight, recordsScale]);
@@ -26,7 +26,7 @@ const Canvas = ({ height, width, padding }) => {
   useEffect(() => {
     select(xAxisRef.current).call(
       axisBottom(timeScale)
-        .ticks(TICKS_NUMBER)
+        // .ticks(TICKS_NUMBER)
         .tickSize(5)
     );
   }, [innerWidth, timeScale]);

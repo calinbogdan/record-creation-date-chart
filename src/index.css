@@ -21,11 +21,13 @@ code {
 
 .line-chart {
   fill: none;
-  stroke: currentColor;
-  stroke-opacity: 1;
-  stroke-width: 2;
+  stroke-width: 3;
 }
 
-.grid-rectangle {
-  opacity: 0.3;
+.grid-lines {
+  opacity: 0.1;
+}
+
+.area-chart {
+  opacity: 0.8;
 }

@@ -4,13 +4,15 @@ import { extent, group } from "d3-array";
 import {
   scaleTime,
   utcParse,
-  scaleLinear
+  scaleLinear,
+  area
 } from "d3";
 
 const HealthRecordsContext = createContext(null);
 
 const parseTime = utcParse("%d %b %Y");
 
+// Public
 function useFilteredHealthRecords() {
   const { healthRecords, institutesIds } = useContext(HealthRecordsContext);
   const [filteredRecords, setFilteredRecords] = useState([]);
@@ -22,6 +24,7 @@ function useFilteredHealthRecords() {
   return filteredRecords;
 }
 
+// Public
 function useTimeScale(width) {
   const healthRecords = useFilteredHealthRecords();
   const [timeDomain, setTimeScale] = useState(() =>
@@ -40,6 +43,8 @@ function useTimeScale(width) {
   return timeDomain;
 };
 
+
+// Public
 function useRecordsScale(height) {
   const healthRecords = useFilteredHealthRecords();
   const [recordsScale, setRecordsScale] = useState(() =>
@@ -61,5 +66,27 @@ function useRecordsScale(height) {
   return recordsScale;
 };
 
-export { useTimeScale, useRecordsScale };
+// Public
+function useChartGenerator(height, width) {
+  const recordsScale = useRecordsScale(height);
+  const timeScale = useTimeScale(width);
+  const [chartGenerator, setChartGenerator] = useState(null);
+
+  useEffect(() => {
+    setChartGenerator(() => area()
+      .x(({ day }) => timeScale(new Date(day)))
+      .y0(height)
+      .y1(({ recordsCount }) => recordsScale(recordsCount))
+    );
+  }, [timeScale, recordsScale, height]);
+
+  return chartGenerator;
+}
+
+export {
+  useTimeScale,
+  useRecordsScale,
+  useChartGenerator,
+  useFilteredHealthRecords
+};
 export default HealthRecordsContext;
