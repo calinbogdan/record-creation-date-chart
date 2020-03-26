@@ -19,10 +19,6 @@ code {
   stroke: gainsboro;
 }
 
-.area-chart {
-  opacity: 0.2;
-}
-
 .line-chart {
   fill: none;
   stroke: currentColor;
