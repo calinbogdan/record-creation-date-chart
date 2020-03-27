@@ -66,27 +66,9 @@ function useRecordsScale(height) {
   return recordsScale;
 };
 
-// Public
-function useChartGenerator(height, width) {
-  const recordsScale = useRecordsScale(height);
-  const timeScale = useTimeScale(width);
-  const [chartGenerator, setChartGenerator] = useState(null);
-
-  useEffect(() => {
-    setChartGenerator(() => area()
-      .x(({ day }) => timeScale(new Date(day)))
-      .y0(height)
-      .y1(({ recordsCount }) => recordsScale(recordsCount))
-    );
-  }, [timeScale, recordsScale, height]);
-
-  return chartGenerator;
-}
-
 export {
   useTimeScale,
   useRecordsScale,
-  useChartGenerator,
   useFilteredHealthRecords
 };
 export default HealthRecordsContext;
