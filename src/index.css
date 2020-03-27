@@ -31,3 +31,32 @@ code {
 .area-chart {
   opacity: 0.8;
 }
+
+.slider * {
+  height: 36px;
+}
+.slider-background {
+  fill: #eee;
+}
+.slider-active-area {
+  fill: #ddd;
+}
+.slider-handle rect {
+  fill: #aaa;
+}
+.slider-handle-line {
+  width: 3px;
+}
+
+.slider-mouse-move-detector {
+  fill: transparent;
+}
+
+.slider-handle-button {
+  width: 9px;
+  transform: translate(-3px, 9px);
+  height: 18px;
+}
+.slider-handle-button:hover {
+  cursor: pointer;
+}

@@ -2,8 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { select, axisBottom, axisLeft } from 'd3';
 import { useTimeScale, useRecordsScale } from '../healthRecordsContext';
 import GridRectangle from "./GridRectangle";
-
-const TICKS_NUMBER = 5; // default value
+import Slider from './Slider/Slider';
 
 const Canvas = ({ height, width, padding }) => {
   const innerHeight = height - 2 * padding;
@@ -18,7 +17,6 @@ const Canvas = ({ height, width, padding }) => {
   useEffect(() => {
     select(yAxisRef.current).call(
       axisLeft(recordsScale)
-        // .ticks(TICKS_NUMBER)
         .tickSize(5)
     );
   }, [innerHeight, recordsScale]);
@@ -26,12 +24,11 @@ const Canvas = ({ height, width, padding }) => {
   useEffect(() => {
     select(xAxisRef.current).call(
       axisBottom(timeScale)
-        // .ticks(TICKS_NUMBER)
         .tickSize(5)
     );
   }, [innerWidth, timeScale]);
 
-  return <svg height={height} width={width}>
+  return <svg height={height + 200} width={width}>
     <g style={{ transform: `translate(${padding}px,${padding}px)` }}>
       <GridRectangle
         height={innerHeight}
@@ -40,6 +37,9 @@ const Canvas = ({ height, width, padding }) => {
         style={{ transform: `translateY(${innerHeight}px)` }}
         ref={xAxisRef} />
       <g ref={yAxisRef} />
+      <g style={{ transform: `translateY(${innerHeight + 30}px)` }}>
+        <Slider width={innerWidth} />
+      </g>
     </g>
   </svg>
 };

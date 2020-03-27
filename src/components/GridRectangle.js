@@ -1,5 +1,4 @@
 import { area, axisBottom, axisRight, select, stack } from "d3";
-import { group } from "d3-array";
 import React, { useContext, useEffect, useRef } from "react";
 import HealthRecordsContext, { useRecordsGroupedByDay, useRecordsScale, useTimeScale } from "../healthRecordsContext";
 import getRandomColor from "../randomColor";

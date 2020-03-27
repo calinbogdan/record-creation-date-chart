@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState, useContext } from 'react';
+import { createContext, useEffect, useState, useContext } from 'react';
 import { extent, group } from "d3-array";
 
 import {
@@ -10,7 +10,6 @@ import {
 const HealthRecordsContext = createContext(null);
 
 const parseTime = utcParse("%d %b %Y");
-
 
 /*
     Basically, what the following algorithm does is grouping the records by day, then by institute.
