@@ -1,7 +1,7 @@
 import { area, axisBottom, axisRight, select, stack } from "d3";
 import { group } from "d3-array";
 import React, { useContext, useEffect, useRef } from "react";
-import HealthRecordsContext, { useFilteredHealthRecords, useRecordsScale, useTimeScale } from "../healthRecordsContext";
+import HealthRecordsContext, { useRecordsGroupedByDay, useRecordsScale, useTimeScale } from "../healthRecordsContext";
 import getRandomColor from "../randomColor";
 
 const GridRectangle = (props) => {
@@ -11,7 +11,7 @@ const GridRectangle = (props) => {
   const yLinesRef = useRef();
   const xLinesRef = useRef();
 
-  const healthRecords = useFilteredHealthRecords();
+  const recordsGroupedByDay = useRecordsGroupedByDay();
 
   const timeScale = useTimeScale(width);
   const recordsScale = useRecordsScale(height);
@@ -29,32 +29,6 @@ const GridRectangle = (props) => {
           .tickSize(height)
       );
   }, [width, height, recordsScale, timeScale]);
-
-  /*
-    Basically, what the following algorithm does is grouping the records by day, then by institute.
-    The aim is to have an array like the following: 
-    [
-      { date: day1, institute1: institute1NumberOfRecordsInThatDay, institute2: institute2NumberOfRecordsInThatDay },
-      { date: day2, institute1: institute1NumberOfRecordsInThatDay, institute2: institute2NumberOfRecordsInThatDay },
-      ...
-    ]
-  */
-  const recordsGroupedByDay = Array.from(
-    group(
-      healthRecords,
-      healthRecord => healthRecord.createdon,
-      healthRecord => healthRecord.institute_id), ([date, institutes]) => ({ date, institutes: institutes }))
-    .map(({ date, institutes }) => {
-      return {
-        date,
-        ...institutesIds.map(instituteId => [instituteId, institutes.get(instituteId)?.length ?? 0]) // if there's no record for the given institute in that day, we're 'defaulting' it to 0
-          .reduce((base, [instituteId, recordsCount]) => ({
-            ...base,
-            [instituteId]: recordsCount
-          }), {})
-      }
-    })
-    .sort(({ date: firstDate }, { date: secondDate }) => new Date(firstDate).getTime() - new Date(secondDate).getTime());
 
   const stackedData = stack()
     .keys(institutesIds)

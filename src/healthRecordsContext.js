@@ -4,13 +4,50 @@ import { extent, group } from "d3-array";
 import {
   scaleTime,
   utcParse,
-  scaleLinear,
-  area
+  scaleLinear
 } from "d3";
 
 const HealthRecordsContext = createContext(null);
 
 const parseTime = utcParse("%d %b %Y");
+
+
+/*
+    Basically, what the following algorithm does is grouping the records by day, then by institute.
+    The aim is to have an array like the following: 
+    [
+      { date: day1, institute1: institute1NumberOfRecordsInThatDay, institute2: institute2NumberOfRecordsInThatDay },
+      { date: day2, institute1: institute1NumberOfRecordsInThatDay, institute2: institute2NumberOfRecordsInThatDay },
+      ...
+    ]
+*/
+function useRecordsGroupedByDay() {
+  const { healthRecords, institutesIds } = useContext(HealthRecordsContext);
+  const [groupedRecords, setGroupedRecords] = useState([]);
+
+  useEffect(() => {
+    setGroupedRecords(
+      Array.from(
+        group(
+          healthRecords,
+          healthRecord => healthRecord.createdon,
+          healthRecord => healthRecord.institute_id), ([date, institutes]) => ({ date, institutes: institutes }))
+        .map(({ date, institutes }) => {
+          return {
+            date,
+            ...institutesIds.map(instituteId => [instituteId, institutes.get(instituteId)?.length ?? 0]) // if there's no record for the given institute in that day, we're 'defaulting' it to 0
+              .reduce((base, [instituteId, recordsCount]) => ({
+                ...base,
+                [instituteId]: recordsCount
+              }), {})
+          }
+        })
+        .sort(({ date: firstDate }, { date: secondDate }) => new Date(firstDate).getTime() - new Date(secondDate).getTime())
+    );
+  }, [institutesIds, healthRecords]);
+
+  return groupedRecords;
+}
 
 // Public
 function useFilteredHealthRecords() {
@@ -43,8 +80,6 @@ function useTimeScale(width) {
   return timeDomain;
 };
 
-
-// Public
 function useRecordsScale(height) {
   const healthRecords = useFilteredHealthRecords();
   const [recordsScale, setRecordsScale] = useState(() =>
@@ -69,6 +104,6 @@ function useRecordsScale(height) {
 export {
   useTimeScale,
   useRecordsScale,
-  useFilteredHealthRecords
+  useRecordsGroupedByDay
 };
 export default HealthRecordsContext;
