@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import InstituteListItem from "./InstituteListItem";
 import InstitutesContext from "./institutesContext";
 
@@ -12,6 +12,22 @@ const Arrow = ({ up }) => {
     </svg>
   );
 };
+
+function useOnClickOutside(ref, onClickOutside) {
+  useEffect(() => {
+    const mouseDownListener = event => {
+      if (!ref.current || ref.current.contains(event.target)) {
+        return;
+      }
+      onClickOutside();
+    };
+
+    document.addEventListener("mousedown", mouseDownListener);
+    return () => {
+      document.removeEventListener("mousedown", mouseDownListener);
+    };
+  });
+}
 
 function mapInstituteArray(institutes) {
   return institutes.map(institute => ({
@@ -39,10 +55,13 @@ const InstituteSelector = ({
   institutes: institutesArray,
   onSelectionChanged
 }) => {
+  const menuRef = useRef();
   const [open, setOpen] = useState(true);
   const [institutes, setInstitutes] = useState(
     mapInstituteArray(institutesArray)
   );
+
+  useOnClickOutside(menuRef, () => setOpen(false));
 
   useEffect(() => {
     setInstitutes(mapInstituteArray(institutesArray));
@@ -87,14 +106,13 @@ const InstituteSelector = ({
           }
         }}
       >
-        <p>Institute(s)</p>
         <div className="selector-bar" onClick={() => setOpen(value => !value)}>
           <SelectedInstitutesTitle
             count={institutes.filter(({ selected }) => selected).length}
           />
           <Arrow up={open} />
         </div>
-        <div className={`menu ${!open && "hidden"}`}>
+        <div ref={menuRef} className={`menu ${!open && "hidden"}`}>
           <div className="selector-button-group">
             <button onClick={selectAllListener}>Select all</button>
             <button onClick={deselectAllListener}>Deselect all</button>

@@ -15,7 +15,7 @@ function App() {
   const [selectedInstitutesIds, setSelectedInstitutes] = useState(institutesIds);
 
   return (
-    <div>
+    <React.Fragment>
       <InstituteSelector
         institutes={institutes}
         onSelectionChanged={selectedIds => setSelectedInstitutes(selectedIds)}
@@ -28,7 +28,7 @@ function App() {
         institutesIds={institutesIds}
         selectedIds={selectedInstitutesIds}
       />
-    </div>
+    </React.Fragment>
   );
 }
 
