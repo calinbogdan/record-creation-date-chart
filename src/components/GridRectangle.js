@@ -1,7 +1,9 @@
 import { area, axisBottom, axisRight, select, stack } from "d3";
 import React, { useContext, useEffect, useRef } from "react";
-import HealthRecordsContext, { useRecordsGroupedByDay, useRecordsScale, useTimeScale } from "../healthRecordsContext";
+import HealthRecordsContext, { useRecordsGroupedByDay } from "../healthRecordsContext";
 import getRandomColor from "../randomColor";
+import { useTimeScale } from "../timeScaleContext";
+import { useRecordsScale } from "../recordsScaleContext";
 
 const GridRectangle = (props) => {
   const { height, width } = props;
@@ -32,9 +34,8 @@ const GridRectangle = (props) => {
   const stackedData = stack()
     .keys(institutesIds)
     (recordsGroupedByDay);
-  console.log(stackedData);
 
-  console.log(`Records scale: ${recordsScale(5)}`);
+  console.log(stackedData);
 
   return <svg
     height={height}

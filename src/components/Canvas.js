@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { select, axisBottom, axisLeft } from 'd3';
-import { useTimeScale, useRecordsScale } from '../healthRecordsContext';
 import GridRectangle from "./GridRectangle";
 import Slider from './Slider/Slider';
+
+import { useTimeScale } from "../timeScaleContext";
+import { useRecordsScale } from "../recordsScaleContext";
 
 const Canvas = ({ height, width, padding }) => {
   const innerHeight = height - 2 * padding;
@@ -11,8 +13,8 @@ const Canvas = ({ height, width, padding }) => {
   const yAxisRef = useRef();
   const xAxisRef = useRef();
 
-  const recordsScale = useRecordsScale(innerHeight);
-  const timeScale = useTimeScale(innerWidth);
+  const recordsScale = useRecordsScale();
+  const timeScale = useTimeScale();
 
   useEffect(() => {
     select(yAxisRef.current).call(
@@ -33,15 +35,14 @@ const Canvas = ({ height, width, padding }) => {
       <GridRectangle
         height={innerHeight}
         width={innerWidth} />
-      <g
-        style={{ transform: `translateY(${innerHeight}px)` }}
+      <g style={{ transform: `translateY(${innerHeight}px)` }}
         ref={xAxisRef} />
       <g ref={yAxisRef} />
       <g style={{ transform: `translateY(${innerHeight + 30}px)` }}>
         <Slider width={innerWidth} />
       </g>
     </g>
-  </svg>
+  </svg>;
 };
 
 export default Canvas;

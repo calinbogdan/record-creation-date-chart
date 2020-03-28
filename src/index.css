@@ -36,7 +36,7 @@ code {
   height: 36px;
 }
 .slider-background {
-  fill: #eee;
+  fill: #efefef;
 }
 .slider-active-area {
   fill: #ddd;
@@ -45,7 +45,8 @@ code {
   fill: #aaa;
 }
 .slider-handle-line {
-  width: 3px;
+  width: 2px;
+  transform: translateX(-0.5px)
 }
 
 .slider-mouse-move-detector {
@@ -54,7 +55,7 @@ code {
 
 .slider-handle-button {
   width: 9px;
-  transform: translate(-3px, 9px);
+  transform: translate(-4px, 9px);
   height: 18px;
 }
 .slider-handle-button:hover {
