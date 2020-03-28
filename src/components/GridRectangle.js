@@ -27,26 +27,49 @@ const GridRectangle = props => {
 
   const stackedData = stack().keys(institutesIds)(recordsGroupedByDay);
 
+  const areaFrom = area()
+    .x(d => timeScale(new Date(d.data.date)))
+    .y0(d => recordsScale(d["0"]))
+    .y1(d => recordsScale(d["1"]));
+
   return (
     <svg height={height} width={width}>
-      {stackedData.map((data, index) => {
-        return (
-          <path
-            key={index}
-            style={{ fill: COLORS[index] }}
-            d={area()
-              .x(d => timeScale(new Date(d.data.date)))
-              .y0(d => recordsScale(d["0"]))
-              .y1(d => recordsScale(d["1"]))(data)}
-          />
-        );
-      })}
+      <g className="graphs">
+        {stackedData.map((data, index) => {
+          return (
+            <g key={index}>
+              <path
+                style={{
+                  fill: COLORS[index],
+                  opacity: 0.5
+                }}
+                d={areaFrom(data)}
+              />
+              <path
+                style={{
+                  fill: "none",
+                  strokeWidth: 1.5,
+                  stroke: COLORS[index]
+                }}
+                d={areaFrom.lineY1()(data)}
+              />
+            </g>
+          );
+        })}
+      </g>
       <g className="grid-lines">
         <g ref={yLinesRef} />
         <g ref={xLinesRef} />
       </g>
       <rect width={width} height={height} style={{ fill: "transparent" }} />
-      <line x1="0" x2={width} y1={400} y2={400} stroke="gray" strokeDasharray="3"/>
+      <line
+        x1="0"
+        x2={width}
+        y1={400}
+        y2={400}
+        stroke="gray"
+        strokeDasharray="3"
+      />
     </svg>
   );
 };

@@ -65,7 +65,7 @@ const Slider = ({ width }) => {
       <rect ref={backgroundRef} className="slider-background" width={width} />
       <rect
         className="slider-active-area"
-        width={endX - startX}
+        width={(endX - startX) || 0}
         style={{ transform: `translateX(${startX}px)` }}
       />
       <Handle x={startX} />
