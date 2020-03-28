@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
+import TimeScaleContext, { useFullTimeScale } from '../../timeScaleContext';
 
 const Handle = props => {
   // const [dragging, setDragging] = useState(false);
@@ -14,6 +15,9 @@ const Slider = ({ width }) => {
   const [dragging, setDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [endX, setEndX] = useState(width);
+
+  const timeScale = useFullTimeScale();
+  const { setNewStartDate, setNewEndDate } = useContext(TimeScaleContext);
 
   return <g className="slider">
     <rect
@@ -35,27 +39,27 @@ const Slider = ({ width }) => {
         setDragging(true);
 
         // get the closest handle to the current position
-        const { x: sliderClientX } = backgroundRef.current.getBoundingClientRect();
-        const currentPosX = e.clientX - sliderClientX;
-        if (endX - currentPosX > currentPosX - startX) {
-          setStartX(currentPosX);
-        } else {
-          setEndX(currentPosX);
-        }
+        moveHandle(backgroundRef, e, endX, startX, setStartX, setNewStartDate, timeScale, setEndX, setNewEndDate);
       }}
       onMouseMove={e => {
         if (dragging) {
-          // get the closest handle to the current position
-          const { x: sliderClientX } = backgroundRef.current.getBoundingClientRect();
-          const currentPosX = e.clientX - sliderClientX;
-          if (endX - currentPosX > currentPosX - startX) {
-            setStartX(currentPosX);
-          } else {
-            setEndX(currentPosX);
-          }
+          moveHandle(backgroundRef, e, endX, startX, setStartX, setNewStartDate, timeScale, setEndX, setNewEndDate);
         }
       }} />
   </g>
 };
 
 export default Slider;
+
+function moveHandle(backgroundRef, e, endX, startX, setStartX, setNewStartDate, timeScale, setEndX, setNewEndDate) {
+  const { x: sliderClientX } = backgroundRef.current.getBoundingClientRect();
+  const currentPosX = e.clientX - sliderClientX;
+  if (endX - currentPosX > currentPosX - startX) {
+    setStartX(currentPosX);
+    setNewStartDate(timeScale.invert(currentPosX));
+  }
+  else {
+    setEndX(currentPosX);
+    setNewEndDate(timeScale.invert(currentPosX));
+  }
+}

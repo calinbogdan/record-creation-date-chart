@@ -21,7 +21,12 @@ const TimeScaleProvider = ({ children }) => {
     setDomain(newDomain);
   }, [healthRecords]);
 
-  return <TimeScaleContext.Provider value={{ domain, fullDomain }}>
+  return <TimeScaleContext.Provider value={{
+    domain,
+    fullDomain,
+    setNewStartDate: date => setDomain([date, domain[1]]),
+    setNewEndDate: date => setDomain([domain[0], date])
+  }}>
     {children}
   </TimeScaleContext.Provider>;
 }
@@ -42,8 +47,25 @@ function useTimeScale() {
   return timeScale;
 }
 
+function useFullTimeScale() {
+  const { fullDomain } = useContext(TimeScaleContext);
+  const { width } = useContext(ChartDimensionsContext);
+  const [timeScale, setTimeScale] = useState(
+    () => scaleTime(fullDomain, [0, width])
+  );
+
+  useEffect(() => {
+    setTimeScale(
+      () => scaleTime(fullDomain, [0, width])
+    );
+  }, [fullDomain, width]);
+
+  return timeScale;
+}
+
 export {
   TimeScaleProvider,
-  useTimeScale
+  useTimeScale,
+  useFullTimeScale
 }
 export default TimeScaleContext;

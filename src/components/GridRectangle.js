@@ -1,9 +1,10 @@
 import { area, axisBottom, axisRight, select, stack } from "d3";
 import React, { useContext, useEffect, useRef } from "react";
 import HealthRecordsContext, { useRecordsGroupedByDay } from "../healthRecordsContext";
-import getRandomColor from "../randomColor";
 import { useTimeScale } from "../timeScaleContext";
 import { useRecordsScale } from "../recordsScaleContext";
+
+const COLORS = ['red', 'yellow', 'orange', 'green', 'blue'];
 
 const GridRectangle = (props) => {
   const { height, width } = props;
@@ -43,7 +44,7 @@ const GridRectangle = (props) => {
     {stackedData.map((data, index) => {
       return <path
         key={index}
-        style={{ fill: getRandomColor() }}
+        style={{ fill: COLORS[index] }}
         d={area()
           .x(d => timeScale(new Date(d.data.date)))
           .y0(d => recordsScale(d['0']))
