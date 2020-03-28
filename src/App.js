@@ -8,7 +8,6 @@ import InstituteSelector from "./components/InstituteSelector/InstituteSelector"
 const CHART_HEIGHT = 600;
 const CHART_WIDTH = 1024;
 
-
 const institutesIds = institutes.map(({ instituteId }) => instituteId);
 
 function App() {
@@ -25,7 +24,7 @@ function App() {
         width={CHART_WIDTH}
         padding={25}
         healthRecords={healthRecords}
-        institutesIds={institutesIds}
+        institutesIds={selectedInstitutesIds}
         selectedIds={selectedInstitutesIds}
       />
     </React.Fragment>

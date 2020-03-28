@@ -47,6 +47,11 @@ function getInstitutesSelectedTitle(length) {
   return `${length} institutes selected`;
 }
 
+function onlySelected(institutes) {
+  return institutes.filter(({ selected }) => selected)
+    .map(({ id }) => id);
+}
+
 const SelectedInstitutesTitle = ({ count }) => (
   <span>{getInstitutesSelectedTitle(count)}</span>
 );
@@ -56,7 +61,7 @@ const InstituteSelector = ({
   onSelectionChanged
 }) => {
   const menuRef = useRef();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [institutes, setInstitutes] = useState(
     mapInstituteArray(institutesArray)
   );
@@ -74,7 +79,8 @@ const InstituteSelector = ({
         selected: true
       }))
     );
-  }, [setInstitutes]);
+    onSelectionChanged(onlySelected(institutes));
+  }, [institutes, onSelectionChanged]);
 
   const deselectAllListener = useCallback(() => {
     setInstitutes(institutes =>
@@ -83,10 +89,11 @@ const InstituteSelector = ({
         selected: false
       }))
     );
-  }, [setInstitutes]);
+    onSelectionChanged(onlySelected(institutes));
+  }, [institutes, onSelectionChanged]);
 
   return (
-    <div className="selector">
+    <div className="selector" ref={menuRef}>
       <InstitutesContext.Provider
         value={{
           institutes,
@@ -102,7 +109,7 @@ const InstituteSelector = ({
                 return institute;
               })
             );
-            onSelectionChanged(institutes.map(({ id }) => id));
+            onSelectionChanged(onlySelected(institutes));
           }
         }}
       >
@@ -112,7 +119,7 @@ const InstituteSelector = ({
           />
           <Arrow up={open} />
         </div>
-        <div ref={menuRef} className={`menu ${!open && "hidden"}`}>
+        <div className={`menu ${!open && "hidden"}`}>
           <div className="selector-button-group">
             <button onClick={selectAllListener}>Select all</button>
             <button onClick={deselectAllListener}>Deselect all</button>
