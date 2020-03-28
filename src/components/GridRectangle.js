@@ -3,26 +3,25 @@ import React, { useContext, useEffect, useRef } from "react";
 import HealthRecordsContext, {
   useRecordsGroupedByDay
 } from "../healthRecordsContext";
-import { useTimeScale } from "../timeScaleContext";
 import { useRecordsScale } from "../recordsScaleContext";
+import TimeScaleContext from "../timeScaleContext";
 
 const COLORS = ["red", "yellow", "orange", "green", "blue"];
 
 const GridRectangle = props => {
   const { height, width } = props;
   const { institutesIds } = useContext(HealthRecordsContext);
+  const { timeScale } = useContext(TimeScaleContext);
 
   const yLinesRef = useRef();
   const xLinesRef = useRef();
 
   const recordsGroupedByDay = useRecordsGroupedByDay();
 
-  const timeScale = useTimeScale(width);
-  const recordsScale = useRecordsScale(height);
+  const recordsScale = useRecordsScale();
 
   useEffect(() => {
     select(yLinesRef.current).call(axisRight(recordsScale).tickSize(width));
-
     select(xLinesRef.current).call(axisBottom(timeScale).tickSize(height));
   }, [width, height, recordsScale, timeScale]);
 

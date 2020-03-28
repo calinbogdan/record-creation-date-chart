@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import { select, axisBottom, axisLeft } from 'd3';
 import GridRectangle from "./GridRectangle";
 import Slider from './Slider/Slider';
 
-import { useTimeScale } from "../timeScaleContext";
+import TimeScaleContext from "../timeScaleContext";
 import { useRecordsScale } from "../recordsScaleContext";
 
 const Canvas = ({ height, width, padding }) => {
@@ -14,7 +14,7 @@ const Canvas = ({ height, width, padding }) => {
   const xAxisRef = useRef();
 
   const recordsScale = useRecordsScale();
-  const timeScale = useTimeScale();
+  const { timeScale } = useContext(TimeScaleContext);
 
   useEffect(() => {
     select(yAxisRef.current).call(

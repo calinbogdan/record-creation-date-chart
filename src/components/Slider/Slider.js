@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useCallback } from "react";
-import TimeScaleContext, { useFullTimeScale } from "../../timeScaleContext";
+import TimeScaleContext from "../../timeScaleContext";
 
 const Handle = props => {
   return (
@@ -16,12 +16,7 @@ const Handle = props => {
 const Slider = ({ width }) => {
   const backgroundRef = useRef();
   const [dragging, setDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [endX, setEndX] = useState(width);
-
-  const timeScale = useFullTimeScale();
-  const { setNewStartDate, setNewEndDate } = useContext(TimeScaleContext);
-
+  const { startX, endX, onStartHandleMoved, onEndHandleMoved } = useContext(TimeScaleContext);
   const mouseOutListener = useCallback(() => {
     setDragging(false);
   }, []);
@@ -33,21 +28,18 @@ const Slider = ({ width }) => {
   const mouseDownListener = useCallback(
     e => {
       setDragging(true);
-
       // get the closest handle to the current position
       const {
         x: sliderClientX
       } = backgroundRef.current.getBoundingClientRect();
       const currentPosX = e.clientX - sliderClientX;
       if (endX - currentPosX > currentPosX - startX) {
-        setStartX(currentPosX);
-        setNewStartDate(timeScale.invert(currentPosX));
+        onStartHandleMoved(currentPosX);
       } else {
-        setEndX(currentPosX);
-        setNewEndDate(timeScale.invert(currentPosX));
+        onEndHandleMoved(currentPosX);
       }
     },
-    [endX, startX, setNewStartDate, timeScale, setNewEndDate]
+    [endX, onEndHandleMoved, onStartHandleMoved, startX]
   );
 
   const mouseMoveListener = useCallback(
@@ -59,15 +51,13 @@ const Slider = ({ width }) => {
         } = backgroundRef.current.getBoundingClientRect();
         const currentPosX = e.clientX - sliderClientX;
         if (endX - currentPosX > currentPosX - startX) {
-          setStartX(currentPosX);
-          setNewStartDate(timeScale.invert(currentPosX));
+          onStartHandleMoved(currentPosX);
         } else {
-          setEndX(currentPosX);
-          setNewEndDate(timeScale.invert(currentPosX));
+          onEndHandleMoved(currentPosX);
         }
       }
     },
-    [dragging, endX, startX, setNewStartDate, timeScale, setNewEndDate]
+    [dragging, endX, startX, onStartHandleMoved, onEndHandleMoved]
   );
 
   return (

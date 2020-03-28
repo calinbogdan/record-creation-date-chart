@@ -27,7 +27,6 @@ function App() {
         padding={25}
         healthRecords={healthRecords}
         institutesIds={selectedInstitutesIds}
-        selectedIds={selectedInstitutesIds}
       />
     </React.Fragment>
   );
