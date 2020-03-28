@@ -36,8 +36,6 @@ const GridRectangle = (props) => {
     .keys(institutesIds)
     (recordsGroupedByDay);
 
-  console.log(stackedData);
-
   return <svg
     height={height}
     width={width}>
@@ -58,10 +56,7 @@ const GridRectangle = (props) => {
     <rect
       width={width}
       height={height}
-      style={{ fill: 'transparent' }}
-      onMouseEnter={() => console.log('Mouse entered grid rectangle!')}
-      onMouseLeave={() => console.log('Mouse left grid rectangle!')}
-      onMouseMove={() => console.log('Mouse is moving inside the rectangle.')} />
+      style={{ fill: 'transparent' }} />
   </svg>
 }
 
