@@ -48,8 +48,14 @@ function getInstitutesSelectedTitle(length) {
 }
 
 function onlySelected(institutes) {
-  return institutes.filter(({ selected }) => selected)
-    .map(({ id }) => id);
+  return institutes.filter(({ selected }) => selected).map(({ id }) => id);
+}
+
+function mapSelected(institutes, selected) {
+  return institutes.map(institute => ({
+    ...institute,
+    selected: selected
+  }));
 }
 
 const SelectedInstitutesTitle = ({ count }) => (
@@ -73,22 +79,14 @@ const InstituteSelector = ({
   }, [institutesArray]);
 
   const selectAllListener = useCallback(() => {
-    setInstitutes(institutes =>
-      institutes.map(institute => ({
-        ...institute,
-        selected: true
-      }))
-    );
-    onSelectionChanged(onlySelected(institutes));
-  }, [institutes, onSelectionChanged]);
+    setInstitutes(mapSelected(institutes, true));
+  }, [institutes]);
 
   const deselectAllListener = useCallback(() => {
-    setInstitutes(institutes =>
-      institutes.map(institute => ({
-        ...institute,
-        selected: false
-      }))
-    );
+    setInstitutes(mapSelected(institutes, false));
+  }, [institutes]);
+
+  useEffect(() => {
     onSelectionChanged(onlySelected(institutes));
   }, [institutes, onSelectionChanged]);
 
@@ -98,18 +96,16 @@ const InstituteSelector = ({
         value={{
           institutes,
           setInstituteSelected: (instituteId, isSelected) => {
-            setInstitutes(institutes =>
-              institutes.map(institute => {
-                if (institute.id === instituteId) {
-                  return {
-                    ...institute,
-                    selected: isSelected
-                  };
-                }
-                return institute;
-              })
-            );
-            onSelectionChanged(onlySelected(institutes));
+            const newInstitutesArray = institutes.map(institute => {
+              if (institute.id === instituteId) {
+                return {
+                  ...institute,
+                  selected: isSelected
+                };
+              }
+              return institute;
+            });
+            setInstitutes(newInstitutesArray);
           }
         }}
       >

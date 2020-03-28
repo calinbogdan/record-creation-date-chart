@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import "./App.css";
 import { results as healthRecords } from "./assets/records";
 import { results as institutes } from "./assets/institutes";
@@ -8,16 +8,18 @@ import InstituteSelector from "./components/InstituteSelector/InstituteSelector"
 const CHART_HEIGHT = 600;
 const CHART_WIDTH = 1024;
 
-const institutesIds = institutes.map(({ instituteId }) => instituteId);
-
 function App() {
-  const [selectedInstitutesIds, setSelectedInstitutes] = useState(institutesIds);
+  const [selectedInstitutesIds, setSelectedInstitutes] = useState([]);
+
+  const selectionChangedListener = useCallback(selectedIds => {
+    setSelectedInstitutes(selectedIds);
+  }, [setSelectedInstitutes]);
 
   return (
     <React.Fragment>
       <InstituteSelector
         institutes={institutes}
-        onSelectionChanged={selectedIds => setSelectedInstitutes(selectedIds)}
+        onSelectionChanged={selectionChangedListener}
       />
       <RecordCreationChart
         height={CHART_HEIGHT}
