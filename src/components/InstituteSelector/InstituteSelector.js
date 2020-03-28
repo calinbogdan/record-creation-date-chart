@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import InstituteListItem from "./InstituteListItem";
 import InstitutesContext from "./institutesContext";
 
@@ -13,30 +13,58 @@ const Arrow = ({ up }) => {
   );
 };
 
-function instituteArrayToMap(institutes) {
-  return institutes.reduce(
-    (map, institute) => ({
-      ...map,
-      [institute.instituteId]: {
-        id: institute.instituteId,
-        name: institute.instituteName,
-        abbreviation: institute.instituteAbbreviation,
-        selected: false
-      }
-    }),
-    {}
-  );
+function mapInstituteArray(institutes) {
+  return institutes.map(institute => ({
+    id: institute.instituteId,
+    name: institute.instituteName,
+    abbreviation: institute.instituteAbbreviation,
+    selected: false
+  }));
 }
 
-const InstituteSelector = ({ institutes: institutesArray, onSelectionChanged }) => {
+function getInstitutesSelectedTitle(length) {
+  if (length === 0) {
+    return "no institute selected";
+  } else if (length === 1) {
+    return "1 institute selected";
+  }
+  return `${length} institutes selected`;
+}
+
+const SelectedInstitutesTitle = ({ count }) => (
+  <span>{getInstitutesSelectedTitle(count)}</span>
+);
+
+const InstituteSelector = ({
+  institutes: institutesArray,
+  onSelectionChanged
+}) => {
   const [open, setOpen] = useState(true);
   const [institutes, setInstitutes] = useState(
-    instituteArrayToMap(institutesArray)
+    mapInstituteArray(institutesArray)
   );
 
   useEffect(() => {
-    setInstitutes(instituteArrayToMap(institutesArray));
+    setInstitutes(mapInstituteArray(institutesArray));
   }, [institutesArray]);
+
+  const selectAllListener = useCallback(() => {
+    setInstitutes(institutes =>
+      institutes.map(institute => ({
+        ...institute,
+        selected: true
+      }))
+    );
+  }, [setInstitutes]);
+
+  const deselectAllListener = useCallback(() => {
+    setInstitutes(institutes =>
+      institutes.map(institute => ({
+        ...institute,
+        selected: false
+      }))
+    );
+  }, [setInstitutes]);
 
   return (
     <div className="selector">
@@ -44,44 +72,43 @@ const InstituteSelector = ({ institutes: institutesArray, onSelectionChanged }) 
         value={{
           institutes,
           setInstituteSelected: (instituteId, isSelected) => {
-            const institute = institutes[instituteId];
-            setInstitutes({
-              ...institutes,
-              [instituteId]: {
-                ...institute,
-                selected: isSelected
-              }
-            });
-
-            onSelectionChanged(
-              Object.values(institutes)
-                .filter(({ selected }) => selected)
-                .map(({ id }) => id)
+            setInstitutes(institutes =>
+              institutes.map(institute => {
+                if (institute.id === instituteId) {
+                  return {
+                    ...institute,
+                    selected: isSelected
+                  };
+                }
+                return institute;
+              })
             );
+            onSelectionChanged(institutes.map(({ id }) => id));
           }
-        }}>
+        }}
+      >
         <p>Institute(s)</p>
         <div className="selector-bar" onClick={() => setOpen(value => !value)}>
-          <span>6 institutes selected</span>
+          <SelectedInstitutesTitle
+            count={institutes.filter(({ selected }) => selected).length}
+          />
           <Arrow up={open} />
         </div>
         <div className={`menu ${!open && "hidden"}`}>
           <div className="selector-button-group">
-            <button>Select all</button>
-            <button>Deselect all</button>
+            <button onClick={selectAllListener}>Select all</button>
+            <button onClick={deselectAllListener}>Deselect all</button>
           </div>
           <ul className="selector-institute-list">
-            {Object.values(institutes).map(
-              ({ id, name, abbreviation, selected }, index) => (
-                <InstituteListItem
-                  key={index}
-                  id={id}
-                  name={name}
-                  abbreviation={abbreviation}
-                  selected={selected}
-                />
-              )
-            )}
+            {institutes.map(({ id, name, abbreviation, selected }, index) => (
+              <InstituteListItem
+                key={index}
+                id={id}
+                name={name}
+                abbreviation={abbreviation}
+                selected={selected}
+              />
+            ))}
           </ul>
         </div>
       </InstitutesContext.Provider>
