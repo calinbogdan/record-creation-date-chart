@@ -7,10 +7,10 @@ import InstituteSelector from "./components/InstituteSelector/InstituteSelector"
 
 const CHART_HEIGHT = 600;
 const CHART_WIDTH = 1200;
-const PADDING = 30;
+const PADDING = 20;
 
 function App() {
-  const [selectedInstitutesIds, setSelectedInstitutes] = useState(institutes.map(({ instituteId }) => instituteId));
+  const [selectedInstitutes, setSelectedInstitutes] = useState(institutes);
 
   const selectionChangedListener = useCallback(selectedIds => {
     setSelectedInstitutes(selectedIds);
@@ -27,7 +27,7 @@ function App() {
         width={CHART_WIDTH}
         padding={PADDING}
         healthRecords={healthRecords}
-        institutesIds={selectedInstitutesIds}
+        institutes={selectedInstitutes}
       />
     </React.Fragment>
   );

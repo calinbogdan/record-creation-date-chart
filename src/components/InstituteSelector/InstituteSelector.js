@@ -50,7 +50,7 @@ function getInstitutesSelectedTitle(length) {
 }
 
 function onlySelected(institutes) {
-  return institutes.filter(({ selected }) => selected).map(({ id }) => id);
+  return institutes.filter(({ selected }) => selected);
 }
 
 function mapSelected(institutes, selected) {

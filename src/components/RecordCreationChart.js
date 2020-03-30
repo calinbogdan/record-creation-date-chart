@@ -8,11 +8,11 @@ import { TimeScaleProvider } from '../timeScaleContext';
 
 const RecordCreationChart = ({
   healthRecords,
-  institutesIds,
+  institutes,
   width,
   height,
   padding }) => {
-  return <HealthRecordsContext.Provider value={{ healthRecords, institutesIds }}>
+  return <HealthRecordsContext.Provider value={{ healthRecords, institutes }}>
     <ChartDimensionsContext.Provider value={{
       height: height - 2 * padding,
       width: width - 2 * padding
@@ -28,7 +28,7 @@ const RecordCreationChart = ({
 
 RecordCreationChart.defaultProps = {
   healthRecords: [],
-  institutesIds: [],
+  institutes: [],
   width: 0,
   height: 0,
   padding: 0

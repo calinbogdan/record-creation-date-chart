@@ -14,8 +14,29 @@ body {
   user-select: none;
 }
 
+.indicator-container {
+  overflow: visible;
+}
+
+.indicator {
+  font: 12px sans-serif;
+  background: black;
+  color: white;
+  padding: 2px 5px;
+  position: absolute;
+}
+
+.time.indicator {
+  transform: translateX(-50%);
+  margin-top: 7px;
+}
+
+.records.indicator {
+  transform: translateX(-100%) translateX(-7px) translateY(-50%);
+}
+
 .canvas {
-  margin: 25px
+  margin-left: 25px
 }
 
 .axis-container {
