@@ -7,9 +7,26 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.canvas {
+  margin: 25px
+}
+
+.axis-container {
+  display: flex;
+  align-items: center;
+}
+
+.axis-title {
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  text-align: center;  
 }
 
 .grid > path {
@@ -62,9 +79,16 @@ code {
 }
 
 .slider-handle-button {
-  width: 9px;
   transform: translate(-4px, 9px);
+}
+
+.slider-handle-button rect {
+  width: 9px;
   height: 18px;
+}
+
+.slider-handle-button line {
+  stroke: white;
 }
 
 .slider-handle-button:hover {
@@ -75,6 +99,7 @@ code {
 
 .selector {
   margin: 8px 16px;
+  display: inline-block;
 }
 
 .selector-bar {
@@ -91,13 +116,6 @@ code {
 .selector-bar:hover {
   cursor: pointer;
   background: #ccc;
-}
-
-.selector * {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }
 
 .arrow {

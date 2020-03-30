@@ -9,11 +9,15 @@ const Handle = props => {
       {...props}
     >
       <rect className="slider-handle-line" />
-      <rect className="slider-handle-button" />
+      <g className="slider-handle-button">
+        <rect/>
+        <line x1="2" x2="7" y1="7" y2="7"/>
+        <line x1="2" x2="7" y1="11" y2="11"/>
+      </g>
     </g>
   );
 };
-const Slider = ({ width }) => {
+const Slider = (props) => {
   const backgroundRef = useRef();
   const [dragging, setDragging] = useState(false);
   const { startX, endX, onStartHandleMoved, onEndHandleMoved } = useContext(TimeScaleContext);
@@ -61,8 +65,8 @@ const Slider = ({ width }) => {
   );
 
   return (
-    <g className="slider">
-      <rect ref={backgroundRef} className="slider-background" width={width} />
+    <g className="slider" {...props}>
+      <rect ref={backgroundRef} className="slider-background" width={props.width} />
       <rect
         className="slider-active-area"
         width={(endX - startX) || 0}
@@ -71,7 +75,7 @@ const Slider = ({ width }) => {
       <Handle x={startX} />
       <Handle x={endX} />
       <rect
-        width={width}
+        width={props.width}
         className="slider-mouse-move-detector"
         onMouseOut={mouseOutListener}
         onMouseUp={mouseUpListener}

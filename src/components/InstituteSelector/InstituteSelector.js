@@ -14,19 +14,21 @@ const Arrow = ({ up }) => {
 };
 
 function useOnClickOutside(ref, onClickOutside) {
-  useEffect(() => {
-    const mouseDownListener = event => {
-      if (!ref.current || ref.current.contains(event.target)) {
-        return;
-      }
-      onClickOutside();
-    };
+  const mouseMoveListener = useCallback(event => {
+    console.log("mouse is moving");
+    if (!ref.current || ref.current.contains(event.target)) {
+      return;
+    }
+    onClickOutside();
+  }, [onClickOutside, ref])
 
-    document.addEventListener("mousedown", mouseDownListener);
+  useEffect(() => {
+    document.addEventListener("mousemove", mouseMoveListener);
     return () => {
-      document.removeEventListener("mousedown", mouseDownListener);
+      console.log("Effect clear was triggered");
+      document.removeEventListener("mousemove", mouseMoveListener);
     };
-  });
+  }, [mouseMoveListener, onClickOutside, ref]);
 }
 
 function mapInstituteArray(institutes) {
@@ -72,7 +74,7 @@ const InstituteSelector = ({
     mapInstituteArray(institutesArray)
   );
 
-  useOnClickOutside(menuRef, () => setOpen(false));
+  // useOnClickOutside(menuRef, () => setOpen(false));
 
   useEffect(() => {
     setInstitutes(mapInstituteArray(institutesArray));
@@ -115,23 +117,25 @@ const InstituteSelector = ({
           />
           <Arrow up={open} />
         </div>
-        <div className={`menu ${!open && "hidden"}`}>
-          <div className="selector-button-group">
-            <button onClick={selectAllListener}>Select all</button>
-            <button onClick={deselectAllListener}>Deselect all</button>
+        {open && (
+          <div className="menu">
+            <div className="selector-button-group">
+              <button onClick={selectAllListener}>Select all</button>
+              <button onClick={deselectAllListener}>Deselect all</button>
+            </div>
+            <ul className="selector-institute-list">
+              {institutes.map(({ id, name, abbreviation, selected }, index) => (
+                <InstituteListItem
+                  key={index}
+                  id={id}
+                  name={name}
+                  abbreviation={abbreviation}
+                  selected={selected}
+                />
+              ))}
+            </ul>
           </div>
-          <ul className="selector-institute-list">
-            {institutes.map(({ id, name, abbreviation, selected }, index) => (
-              <InstituteListItem
-                key={index}
-                id={id}
-                name={name}
-                abbreviation={abbreviation}
-                selected={selected}
-              />
-            ))}
-          </ul>
-        </div>
+        )}
       </InstitutesContext.Provider>
     </div>
   );

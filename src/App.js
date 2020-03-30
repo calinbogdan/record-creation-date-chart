@@ -6,10 +6,11 @@ import { RecordCreationChart } from "./components/RecordCreationChart";
 import InstituteSelector from "./components/InstituteSelector/InstituteSelector";
 
 const CHART_HEIGHT = 600;
-const CHART_WIDTH = 1024;
+const CHART_WIDTH = 1200;
+const PADDING = 30;
 
 function App() {
-  const [selectedInstitutesIds, setSelectedInstitutes] = useState([]);
+  const [selectedInstitutesIds, setSelectedInstitutes] = useState(institutes.map(({ instituteId }) => instituteId));
 
   const selectionChangedListener = useCallback(selectedIds => {
     setSelectedInstitutes(selectedIds);
@@ -24,7 +25,7 @@ function App() {
       <RecordCreationChart
         height={CHART_HEIGHT}
         width={CHART_WIDTH}
-        padding={25}
+        padding={PADDING}
         healthRecords={healthRecords}
         institutesIds={selectedInstitutesIds}
       />

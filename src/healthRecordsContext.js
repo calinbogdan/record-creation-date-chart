@@ -1,7 +1,21 @@
 import { createContext, useEffect, useState, useContext } from 'react';
 import { group, sum } from "d3-array";
+import { stack } from 'd3';
 
 const HealthRecordsContext = createContext(null);
+
+function useStackedData() {
+  const { institutesIds } = useContext(HealthRecordsContext);
+  const groupedRecords = useRecordsGroupedByDay();
+  const [stackedData, setStackedData] = useState([]);
+
+  useEffect(() => {
+    console.log('Grouped records have changed!');
+    setStackedData(stack().keys(institutesIds)(groupedRecords));
+  }, [groupedRecords, institutesIds]);
+
+  return stackedData;
+}
 
 function useHealthRecords() {
   const { healthRecords, institutesIds } = useContext(HealthRecordsContext);
@@ -58,6 +72,7 @@ function useRecordsGroupedByDay() {
 
 export {
   useRecordsGroupedByDay,
-  useHealthRecords
+  useHealthRecords,
+  useStackedData
 };
 export default HealthRecordsContext;
