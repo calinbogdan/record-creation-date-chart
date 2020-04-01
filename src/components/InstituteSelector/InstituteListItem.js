@@ -11,9 +11,22 @@ const TickWrapper = styled.svg`
 
 const Tick = ({ visible }) => (
   <TickWrapper>
-    <polygon points="0,5 4,9 11,2 9,0 4,5 2,3" fillOpacity={ visible || 0 }/>
+    <polygon points="0,5 4,9 11,2 9,0 4,5 2,3" fillOpacity={visible || 0} />
   </TickWrapper>
 );
+
+const ListItemWrapper = styled.li`
+  padding: 4px 16px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:hover {
+    background: #ddd;
+    cursor: pointer;
+  }
+`;
 
 const InstituteListItem = ({ id, name, abbreviation, selected }) => {
   const { setInstituteSelected } = useContext(InstitutesContext);
@@ -22,10 +35,10 @@ const InstituteListItem = ({ id, name, abbreviation, selected }) => {
     setInstituteSelected(id, !selected);
   }, [id, selected, setInstituteSelected]);
   return (
-    <li className="selector-institute-list-item" onClick={clickListener}>
+    <ListItemWrapper onClick={clickListener}>
       <span>{`${name} (${abbreviation})`}</span>
       <Tick visible={selected} />
-    </li>
+    </ListItemWrapper>
   );
 };
 

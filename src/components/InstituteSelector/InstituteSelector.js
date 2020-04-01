@@ -2,16 +2,9 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import InstituteListItem from "./InstituteListItem";
 import InstitutesContext from "./institutesContext";
 
-const Arrow = ({ up }) => {
-  return (
-    <svg className="arrow" height={5} width={10}>
-      <polygon
-        transform={`rotate(${up ? 180 : 0} 5 2.5)`}
-        points="0,0 10,0 5,5"
-      />
-    </svg>
-  );
-};
+import Arrow from "./Arrow";
+import InstituteSelectorTitle from "./InstituteSelectorTitle";
+import styled from "styled-components";
 
 function mapInstituteArray(institutes) {
   return institutes.map(institute => ({
@@ -21,15 +14,6 @@ function mapInstituteArray(institutes) {
     selected: false,
     color: institute.color
   }));
-}
-
-function getInstitutesSelectedTitle(length) {
-  if (length === 0) {
-    return "no institute selected";
-  } else if (length === 1) {
-    return "1 institute selected";
-  }
-  return `${length} institutes selected`;
 }
 
 function onlySelected(institutes) {
@@ -43,15 +27,65 @@ function mapSelected(institutes, selected) {
   }));
 }
 
-const SelectedInstitutesTitle = ({ count }) => (
-  <span>{getInstitutesSelectedTitle(count)}</span>
-);
+const SelectorButtonGroup = styled.div`
+  display: flex;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  & > button {
+    flex-grow: 0.5;
+    background: #eee;
+    border: none;
+    padding: 8px;
+  }
+  & > button:hover {
+    cursor: pointer;
+    background: #ddd;
+  }
+  & > button:focus {
+    outline: 0;
+  }
+`;
+
+const SelectorMenu = styled.div`
+  position: absolute;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+
+  & > ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+`;
+
+const SelectorBar = styled.div`
+  width: 300px;
+  display: inline-flex;
+  align-items: center;
+  background: #ddd;
+  justify-content: space-between;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+
+  &:hover {
+    cursor: pointer;
+    background: #ccc;
+  }
+`;
+
+const Wrapper = styled.div`
+  margin: 8px 16px;
+  display: inline-block;
+`;
 
 const InstituteSelector = ({
   institutes: institutesArray,
   onSelectionChanged
 }) => {
-  const menuRef = useRef();
+  const selectorRef = useRef();
   const [open, setOpen] = useState(false);
   const [institutes, setInstitutes] = useState(
     mapInstituteArray(institutesArray)
@@ -74,7 +108,7 @@ const InstituteSelector = ({
   }, [institutes, onSelectionChanged]);
 
   return (
-    <div className="selector" ref={menuRef}>
+    <Wrapper ref={selectorRef}>
       <InstitutesContext.Provider
         value={{
           institutes,
@@ -92,19 +126,19 @@ const InstituteSelector = ({
           }
         }}
       >
-        <div className="selector-bar" onClick={() => setOpen(value => !value)}>
-          <SelectedInstitutesTitle
+        <SelectorBar onClick={() => setOpen(value => !value)}>
+          <InstituteSelectorTitle
             count={institutes.filter(({ selected }) => selected).length}
           />
           <Arrow up={open} />
-        </div>
+        </SelectorBar>
         {open && (
-          <div className="menu">
-            <div className="selector-button-group">
+          <SelectorMenu>
+            <SelectorButtonGroup>
               <button onClick={selectAllListener}>Select all</button>
               <button onClick={deselectAllListener}>Deselect all</button>
-            </div>
-            <ul className="selector-institute-list">
+            </SelectorButtonGroup>
+            <ul>
               {institutes.map(({ id, name, abbreviation, selected }, index) => (
                 <InstituteListItem
                   key={index}
@@ -115,10 +149,10 @@ const InstituteSelector = ({
                 />
               ))}
             </ul>
-          </div>
+          </SelectorMenu>
         )}
       </InstitutesContext.Provider>
-    </div>
+    </Wrapper>
   );
 };
 
