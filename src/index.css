@@ -14,6 +14,28 @@ body {
   user-select: none;
 }
 
+.legend {
+  font-size: 0.75em;
+  overflow: visible;
+}
+
+.legend-content {
+  display: inline-block;
+  padding: 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.legend-current-date {
+  color: white;
+  margin: 2px;
+}
+
+.legend-institute span{
+  margin: 0px 4px;
+  color: white;
+}
+
 .indicator-container {
   overflow: visible;
 }

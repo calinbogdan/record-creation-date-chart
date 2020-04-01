@@ -1,6 +1,6 @@
 import React from 'react';
 import HealthRecordsContext from "../healthRecordsContext";
-import Canvas from "./Canvas";
+import Canvas from "./Canvas/Canvas";
 import ChartDimensionsContext from '../chartDimensionsContext';
 import RecordsScaleContext from '../recordsScaleContext';
 import { TimeScaleProvider } from '../timeScaleContext';

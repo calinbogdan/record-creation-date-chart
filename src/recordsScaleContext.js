@@ -12,14 +12,14 @@ function useRecordsScale() {
   const recordsPerDay = useRecordsGroupedByDay();
   const [recordsScale, setRecordsScale] = useState(() =>
     scaleLinear()
-      .domain([0, max(recordsPerDay, recordsDay => recordsDay.totalRecords)])
+      .domain([0, max(Object.values(recordsPerDay), recordsDay => recordsDay.totalRecords)])
       .range([height, 0])
   );
 
   useEffect(() => {
     setRecordsScale(() =>
       scaleLinear()
-        .domain([0, max(recordsPerDay, recordsDay => recordsDay.totalRecords)])
+        .domain([0, max(Object.values(recordsPerDay), recordsDay => recordsDay.totalRecords)])
         .range([height, 0])
     );
   }, [recordsPerDay, height])

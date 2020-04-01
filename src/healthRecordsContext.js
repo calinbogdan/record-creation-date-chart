@@ -12,7 +12,7 @@ function useStackedData() {
   useEffect(() => {
     setStackedData(
       stack().keys(institutes.map(({ id }) => id))(
-        groupedRecords
+        Object.values(groupedRecords)
       )
     );
   }, [groupedRecords, institutes]);
@@ -86,7 +86,10 @@ function useRecordsGroupedByDay() {
               {}
             )
         };
-      })
+      }).reduce((previous, current) => {
+        previous[current.date] = current;
+        return previous;
+      }, {})
     );
   }, [healthRecords, institutes]);
 

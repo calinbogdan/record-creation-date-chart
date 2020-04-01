@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { useStackedData } from "../healthRecordsContext";
-import TimeScaleContext from "../timeScaleContext";
-import { useRecordsScale } from "../recordsScaleContext";
+import React, { useContext, useMemo } from "react";
+import { useStackedData } from "../../healthRecordsContext";
+import TimeScaleContext from "../../timeScaleContext";
+import { useRecordsScale } from "../../recordsScaleContext";
 import { area } from "d3";
 
 const COLORS = ["red", "yellow", "orange", "green", "blue"];
@@ -15,7 +15,10 @@ const StackedDataChart = () => {
     .x(d => timeScale(new Date(d.data.date)))
     .y0(d => recordsScale(d["0"]))
     .y1(d => recordsScale(d["1"]));
-    
+
+  // const stackedGraphsPath = useMemo(() => areaFrom(data));
+  // const stackedGraphsLinesPath = useMemo(() => areaFrom.lineY1()(data));
+
   return (
     <g className="graphs">
       {data.map((data, index) => {
@@ -26,6 +29,7 @@ const StackedDataChart = () => {
                 fill: COLORS[index],
                 opacity: 0.5
               }}
+              // d={stackedGraphsPath}
               d={areaFrom(data)}
             />
             <path
@@ -34,6 +38,7 @@ const StackedDataChart = () => {
                 strokeWidth: 1.5,
                 stroke: COLORS[index]
               }}
+              // d={stackedGraphsLinesPath}
               d={areaFrom.lineY1()(data)}
             />
           </g>

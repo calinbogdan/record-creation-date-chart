@@ -6,32 +6,27 @@ import React, {
   useContext
 } from "react";
 import { select, axisBottom, axisLeft, format, timeFormat } from "d3";
-import Slider from "./Slider/Slider";
+import Slider from "../Slider/Slider";
 
-import TimeScaleContext from "../timeScaleContext";
-import { useRecordsScale } from "../recordsScaleContext";
+import TimeScaleContext from "../../timeScaleContext";
+import HealthRecordsContext from "../../healthRecordsContext";
+
+import { useRecordsScale } from "../../recordsScaleContext";
 import StackedDataChart from "./StackedDataChart";
-import HealthRecordsContext, { useRecordsGroupedByDay, useHealthRecords } from "../healthRecordsContext";
+import Legend from "./Legend";
+
 
 const recordsNumberFormat = format("~s");
 
-const timeFormatter = timeFormat("%d-%b-%Y");
+const formatTime = timeFormat("%d-%m-%Y");
 
-const HoverLine = ({ y, width }) => (
-  <line x1="0" x2={width} y1={y} y2={y} stroke="gray" strokeDasharray="2" />
+const HorizontalHoverLine = ({ y, width }) => (
+  <line x1={0} x2={width} y1={y} y2={y} stroke="gray" strokeDasharray="2" />
 );
 
-const Legend = ({ day }) => {
-  const records = useRecordsGroupedByDay();
-  
-
-  return <g>
-    <foreignObject>
-      <span>{day}</span>
-      
-    </foreignObject>
-  </g>;
-}
+const VerticalHoverLine = ({ x, height }) => (
+  <line x1={x} x2={x} y1={0} y2={height} stroke="gray" strokeDasharray="2" />
+);
 
 const Canvas = ({ height, width, padding }) => {
   const innerHeight = height - 2 * padding;
@@ -111,7 +106,6 @@ const Canvas = ({ height, width, padding }) => {
         />
         <g ref={yAxisRef} />
         <svg height={innerHeight} width={innerWidth}>
-          <Legend/>
           <g className="grid-lines">
             <g
               ref={yLinesRef}
@@ -119,8 +113,14 @@ const Canvas = ({ height, width, padding }) => {
             />
             <g ref={xLinesRef} />
           </g>
-          <StackedDataChart />
-          {hoverVisible && <HoverLine y={pointerY} width={innerWidth} />}
+          {institutes.length > 0 && <StackedDataChart />}
+          {hoverVisible && (
+            <HorizontalHoverLine y={pointerY} width={innerWidth} />
+          )}
+          {hoverVisible && (
+            <VerticalHoverLine x={pointerX} height={innerHeight} />
+          )}
+          {true && <Legend x={pointerX} y={pointerY} />}
           <rect
             ref={ref}
             onMouseMove={mouseMoveListener}
@@ -132,16 +132,27 @@ const Canvas = ({ height, width, padding }) => {
           />
         </svg>
         {hoverVisible && (
-          <foreignObject className="indicator-container" y={pointerY} height={50} width={5}>
+          <foreignObject
+            className="indicator-container"
+            y={pointerY}
+            height={50}
+            width={5}
+          >
             <span className="records indicator">
               {Math.floor(recordsScale.invert(pointerY))}
             </span>
           </foreignObject>
         )}
         {hoverVisible && (
-          <foreignObject className="indicator-container" y={innerHeight} x={pointerX} height={50} width={100}>
+          <foreignObject
+            className="indicator-container"
+            y={innerHeight}
+            x={pointerX}
+            height={50}
+            width={100}
+          >
             <span className="time indicator">
-              {timeFormatter(timeScale.invert(pointerX))}
+              {formatTime(timeScale.invert(pointerX))}
             </span>
           </foreignObject>
         )}
