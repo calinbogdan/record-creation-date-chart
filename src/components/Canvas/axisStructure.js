@@ -1,8 +1,8 @@
 import React, { useEffect, useContext, useRef } from "react";
 import { select, axisBottom, axisLeft, format } from "d3";
 
-import TimeScaleContext from "../../timeScaleContext";
-import { useRecordsScale } from "../../recordsScaleContext";
+import TimeScaleContext from "../../contexts/timeScaleContext";
+import { useRecordsScale } from "../../contexts/recordsScaleContext";
 import styled from "styled-components";
 
 const GridWrapper = styled.g`

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { useStackedData } from "../../healthRecordsContext";
-import TimeScaleContext from "../../timeScaleContext";
-import { useRecordsScale } from "../../recordsScaleContext";
+import { useStackedData } from "../../contexts/healthRecordsContext";
+import TimeScaleContext from "../../contexts/timeScaleContext";
+import { useRecordsScale } from "../../contexts/recordsScaleContext";
 import { area } from "d3";
 
 const StackedDataChart = () => {

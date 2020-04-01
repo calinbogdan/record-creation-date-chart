@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useCallback } from "react";
-import TimeScaleContext from "../../timeScaleContext";
+import TimeScaleContext from "../../contexts/timeScaleContext";
 
 import Handle from "./Handle";
 import styled from "styled-components";
@@ -76,7 +76,7 @@ const Slider = props => {
   );
 
   return (
-    <Wrapper {...props}>
+    <Wrapper height={36} {...props}>
       <Background ref={backgroundRef} width={props.width} />
       <ActiveArea
         width={endX - startX || 0}

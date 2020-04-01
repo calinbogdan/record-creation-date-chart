@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import TimeScaleContext from "../../timeScaleContext";
+import TimeScaleContext from "../../contexts/timeScaleContext";
 import HealthRecordsContext, {
   useRecordsGroupedByDay
-} from "../../healthRecordsContext";
+} from "../../contexts/healthRecordsContext";
 import { timeFormat } from "d3";
 import styled from "styled-components";
 

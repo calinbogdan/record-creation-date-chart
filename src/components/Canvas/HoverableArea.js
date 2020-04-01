@@ -5,9 +5,9 @@ import Legend from "./Legend";
 import { TimeIndicator, RecordsCountIndicator } from "./indicators";
 import { HorizontalHoverLine, VerticalHoverLine } from "./hoverLines";
 
-import TimeScaleContext from "../../timeScaleContext";
-import HealthRecordsContext from "../../healthRecordsContext";
-import { useRecordsScale } from "../../recordsScaleContext";
+import TimeScaleContext from "../../contexts/timeScaleContext";
+import HealthRecordsContext from "../../contexts/healthRecordsContext";
+import { useRecordsScale } from "../../contexts/recordsScaleContext";
 
 const formatTime = timeFormat("%d-%m-%Y");
 

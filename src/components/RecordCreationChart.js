@@ -1,29 +1,74 @@
-import React from 'react';
-import HealthRecordsContext from "../healthRecordsContext";
+import React from "react";
+import HealthRecordsContext from "../contexts/healthRecordsContext";
 import Canvas from "./Canvas/Canvas";
-import ChartDimensionsContext from '../chartDimensionsContext';
-import RecordsScaleContext from '../recordsScaleContext';
-import { TimeScaleProvider } from '../timeScaleContext';
+import CanvasDimensionsContext from "../contexts/canvasDimensionsContext";
+import RecordsScaleContext from "../contexts/recordsScaleContext";
+import { TimeScaleProvider } from "../contexts/timeScaleContext";
 
-const CANVAS_PADDING = 20;
+import Slider from "../components/Slider/Slider";
+import styled from "styled-components";
 
-const RecordCreationChart = ({
-  healthRecords,
-  institutes,
-  width,
-  height }) => {
-  return <HealthRecordsContext.Provider value={{ healthRecords, institutes }}>
-    <ChartDimensionsContext.Provider value={{
-      height: height - 2 * CANVAS_PADDING,
-      width: width - 2 * CANVAS_PADDING
-    }}>
-      <TimeScaleProvider>
-        <RecordsScaleContext.Provider>
-          <Canvas height={height} width={width} padding={CANVAS_PADDING} />
-        </RecordsScaleContext.Provider>
-      </TimeScaleProvider>
-    </ChartDimensionsContext.Provider>
-  </HealthRecordsContext.Provider>;
+const Wrapper = styled.div`
+  display: inline-flex;
+`;
+
+const ChartWrapper = styled.div`
+  padding: 4px 0;
+  padding-right: 8px;
+`;
+
+const CanvasWrapper = styled.div`
+  padding-bottom: 32px;
+  display: flex;
+`;
+
+const TextWrapper = styled.span`
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: center;
+  width: 40px;
+  height: ${props => props.height}px;
+  font-size: 0.75em;
+`;
+
+const TEXT_WIDTH = 40;
+const PADDING_RIGHT = 8;
+const PADDING_VERTICAL = 8;
+const SLIDER_SIZE = 36;
+const CHART_TO_SLIDER = 32;
+
+const RecordCreationChart = ({ healthRecords, institutes, width, height }) => {
+  const actualCanvasWidth = width - PADDING_RIGHT - TEXT_WIDTH;
+  const actualCanvasHeight =
+    height - SLIDER_SIZE - CHART_TO_SLIDER - PADDING_VERTICAL;
+  return (
+    <HealthRecordsContext.Provider value={{ healthRecords, institutes }}>
+      <CanvasDimensionsContext.Provider
+        value={{
+          height: actualCanvasHeight,
+          width: actualCanvasWidth
+        }}
+      >
+        <TimeScaleProvider>
+          <RecordsScaleContext.Provider>
+            <Wrapper>
+              <div>
+                <TextWrapper height={actualCanvasHeight}>
+                  Number of records
+                </TextWrapper>
+              </div>
+              <ChartWrapper>
+                <CanvasWrapper>
+                  <Canvas />
+                </CanvasWrapper>
+                <Slider width={actualCanvasWidth} />
+              </ChartWrapper>
+            </Wrapper>
+          </RecordsScaleContext.Provider>
+        </TimeScaleProvider>
+      </CanvasDimensionsContext.Provider>
+    </HealthRecordsContext.Provider>
+  );
 };
 
 RecordCreationChart.defaultProps = {

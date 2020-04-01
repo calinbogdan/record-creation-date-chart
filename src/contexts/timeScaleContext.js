@@ -1,14 +1,14 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { useHealthRecords } from "./healthRecordsContext";
 import { extent } from "d3-array";
-import ChartDimensionsContext from "./chartDimensionsContext";
+import CanvasDimensionsContext from "./canvasDimensionsContext";
 import { scaleTime } from "d3";
 
 const TimeScaleContext = createContext(null);
 
 const TimeScaleProvider = ({ children }) => {
   const healthRecords = useHealthRecords();
-  const { width } = useContext(ChartDimensionsContext);  
+  const { width } = useContext(CanvasDimensionsContext);  
 
   const [domain, setDomain] = useState([new Date(), new Date()]);
   const [fullDomain, setFullDomain] = useState([new Date(), new Date()]);

@@ -11,7 +11,7 @@ const TickWrapper = styled.svg`
 
 const Tick = ({ visible }) => (
   <TickWrapper>
-    <polygon points="0,5 4,9 11,2 9,0 4,5 2,3" fillOpacity={visible || 0} />
+    <polygon points="0,5 4,9 11,2 9,0 4,5 2,3" fillOpacity={visible ? 1 : 0} />
   </TickWrapper>
 );
 
