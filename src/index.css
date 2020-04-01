@@ -49,24 +49,6 @@ body {
   opacity: 0.8;
 }
 
-.slider * {
-  height: 36px;
-}
-
-.slider-background {
-  fill: #efefef;
-}
-
-.slider-active-area {
-  fill: #ddd;
-}
-
-.slider-mouse-move-detector {
-  fill: transparent;
-}
-.slider-mouse-move-detector:hover {
-  cursor: pointer;
-}
 
 /* SELECTOR */
 

@@ -2,11 +2,35 @@ import React, { useState, useRef, useContext, useCallback } from "react";
 import TimeScaleContext from "../../timeScaleContext";
 
 import Handle from "./Handle";
+import styled from "styled-components";
 
-const Slider = (props) => {
+const Wrapper = styled.g`
+  * {
+    height: 36px;
+  }
+`;
+
+const Background = styled.rect`
+  fill: #efefef;
+`;
+
+const ActiveArea = styled.rect`
+  fill: #ddd;
+`;
+
+const MouseEventsListenerRect = styled.rect`
+  fill: transparent;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const Slider = props => {
   const backgroundRef = useRef();
   const [dragging, setDragging] = useState(false);
-  const { startX, endX, onStartHandleMoved, onEndHandleMoved } = useContext(TimeScaleContext);
+  const { startX, endX, onStartHandleMoved, onEndHandleMoved } = useContext(
+    TimeScaleContext
+  );
   const mouseOutListener = useCallback(() => {
     setDragging(false);
   }, []);
@@ -51,16 +75,15 @@ const Slider = (props) => {
   );
 
   return (
-    <g className="slider" {...props}>
-      <rect ref={backgroundRef} className="slider-background" width={props.width} />
-      <rect
-        className="slider-active-area"
-        width={(endX - startX) || 0}
+    <Wrapper {...props}>
+      <Background ref={backgroundRef} width={props.width} />
+      <ActiveArea
+        width={endX - startX || 0}
         style={{ transform: `translateX(${startX}px)` }}
       />
       <Handle x={startX} />
       <Handle x={endX} />
-      <rect
+      <MouseEventsListenerRect
         width={props.width}
         className="slider-mouse-move-detector"
         onMouseOut={mouseOutListener}
@@ -68,7 +91,7 @@ const Slider = (props) => {
         onMouseDown={mouseDownListener}
         onMouseMove={mouseMoveListener}
       />
-    </g>
+    </Wrapper>
   );
 };
 
