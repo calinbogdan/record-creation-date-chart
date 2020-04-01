@@ -4,7 +4,6 @@ import { useRecordsGroupedByDay } from "./healthRecordsContext";
 import { max } from "d3-array";
 import { scaleLinear } from "d3";
 
-
 const RecordsScaleContext = createContext(null);
 
 function useRecordsScale() {

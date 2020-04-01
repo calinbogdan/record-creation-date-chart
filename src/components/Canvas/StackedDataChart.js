@@ -9,8 +9,6 @@ const StackedDataChart = () => {
   const recordsScale = useRecordsScale();
   const data = useStackedData();
 
-  console.log(data);
-
   const areaFrom = area()
     .x(d => timeScale(new Date(d.data.date)))
     .y0(d => recordsScale(d["0"]))

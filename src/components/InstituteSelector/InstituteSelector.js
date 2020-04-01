@@ -64,9 +64,9 @@ const SelectorBar = styled.div`
   width: 300px;
   display: inline-flex;
   align-items: center;
-  background: #ddd;
+  background: #eee;
   justify-content: space-between;
-  padding: 4px 8px;
+  padding: 8px 12px;
   border-radius: 4px;
   border: 1px solid #bbb;
 
@@ -77,8 +77,8 @@ const SelectorBar = styled.div`
 `;
 
 const Wrapper = styled.div`
-  margin: 8px 16px;
   display: inline-block;
+  font: 0.875em sans-serif;
 `;
 
 const InstituteSelector = ({

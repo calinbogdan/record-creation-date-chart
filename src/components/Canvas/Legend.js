@@ -33,6 +33,10 @@ const LegendCurrentDate = styled.div`
   margin: 2px;
 `;
 
+const InstituteRecordsAmount = styled.span`
+  margin: 0px 4px;
+`;
+
 const Legend = ({ x, y }) => {
   const { timeScale } = useContext(TimeScaleContext);
   const { institutes } = useContext(HealthRecordsContext);
@@ -53,8 +57,9 @@ const Legend = ({ x, y }) => {
             return (
               <div key={index} className="legend-institute">
                 <Circle radius={4.5} color={institute.color} />
-                <span>{`${institute.abbreviation}: ${dayData?.[institute.id] ??
-                  0}`}</span>
+                <InstituteRecordsAmount>
+                  {`${institute.abbreviation}: ${dayData?.[institute.id] ?? 0}`}
+                </InstituteRecordsAmount>
               </div>
             );
           })}
