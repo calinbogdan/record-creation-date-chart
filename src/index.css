@@ -61,36 +61,10 @@ body {
   fill: #ddd;
 }
 
-.slider-handle rect {
-  fill: #aaa;
-}
-
-.slider-handle-line {
-  width: 2px;
-  transform: translateX(-0.5px);
-}
-
 .slider-mouse-move-detector {
   fill: transparent;
 }
 .slider-mouse-move-detector:hover {
-  cursor: pointer;
-}
-
-.slider-handle-button {
-  transform: translate(-4px, 9px);
-}
-
-.slider-handle-button rect {
-  width: 9px;
-  height: 18px;
-}
-
-.slider-handle-button line {
-  stroke: white;
-}
-
-.slider-handle-button:hover {
   cursor: pointer;
 }
 

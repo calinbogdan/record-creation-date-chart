@@ -1,22 +1,8 @@
 import React, { useState, useRef, useContext, useCallback } from "react";
 import TimeScaleContext from "../../timeScaleContext";
 
-const Handle = props => {
-  return (
-    <g
-      style={{ transform: `translateX(${props.x}px)` }}
-      className="slider-handle"
-      {...props}
-    >
-      <rect className="slider-handle-line" />
-      <g className="slider-handle-button">
-        <rect/>
-        <line x1="2" x2="7" y1="7" y2="7"/>
-        <line x1="2" x2="7" y1="11" y2="11"/>
-      </g>
-    </g>
-  );
-};
+import Handle from "./Handle";
+
 const Slider = (props) => {
   const backgroundRef = useRef();
   const [dragging, setDragging] = useState(false);
