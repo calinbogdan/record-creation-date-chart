@@ -127,14 +127,3 @@ body {
   background: #ddd;
   cursor: pointer;
 }
-
-.tick {
-  height: 9px;
-  width: 11px;
-  margin-left: 8px;
-  fill: #777;
-}
-
-.tick.hidden {
-  fill: transparent;
-}
