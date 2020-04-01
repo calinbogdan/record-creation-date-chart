@@ -4,7 +4,8 @@ import TimeScaleContext from "../../timeScaleContext";
 import Handle from "./Handle";
 import styled from "styled-components";
 
-const Wrapper = styled.g`
+const Wrapper = styled.svg`
+  overflow: visible;
   * {
     height: 36px;
   }

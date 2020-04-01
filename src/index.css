@@ -12,40 +12,8 @@ body {
   user-select: none;
 }
 
-
-.canvas {
-  margin-left: 25px
-}
-
-.axis-container {
-  display: flex;
-  align-items: center;
-}
-
 .axis-title {
   writing-mode: vertical-lr;
   transform: rotate(180deg);
   text-align: center;  
 }
-
-.grid > path {
-  stroke: gainsboro;
-}
-
-.grid .tick > line {
-  stroke: gainsboro;
-}
-
-.line-chart {
-  fill: none;
-  stroke-width: 3;
-}
-
-.grid-lines {
-  opacity: 0.1;
-}
-
-.area-chart {
-  opacity: 0.8;
-}
-
