@@ -13,30 +13,13 @@ const Arrow = ({ up }) => {
   );
 };
 
-function useOnClickOutside(ref, onClickOutside) {
-  const mouseMoveListener = useCallback(event => {
-    console.log("mouse is moving");
-    if (!ref.current || ref.current.contains(event.target)) {
-      return;
-    }
-    onClickOutside();
-  }, [onClickOutside, ref])
-
-  useEffect(() => {
-    document.addEventListener("mousemove", mouseMoveListener);
-    return () => {
-      console.log("Effect clear was triggered");
-      document.removeEventListener("mousemove", mouseMoveListener);
-    };
-  }, [mouseMoveListener, onClickOutside, ref]);
-}
-
 function mapInstituteArray(institutes) {
   return institutes.map(institute => ({
     id: institute.instituteId,
     name: institute.instituteName,
     abbreviation: institute.instituteAbbreviation,
-    selected: false
+    selected: false,
+    color: institute.color
   }));
 }
 
@@ -73,8 +56,6 @@ const InstituteSelector = ({
   const [institutes, setInstitutes] = useState(
     mapInstituteArray(institutesArray)
   );
-
-  // useOnClickOutside(menuRef, () => setOpen(false));
 
   useEffect(() => {
     setInstitutes(mapInstituteArray(institutesArray));

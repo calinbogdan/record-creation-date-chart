@@ -5,9 +5,8 @@ import { results as institutes } from "./assets/institutes";
 import { RecordCreationChart } from "./components/RecordCreationChart";
 import InstituteSelector from "./components/InstituteSelector/InstituteSelector";
 
-const CHART_HEIGHT = 600;
+const CHART_HEIGHT = 400;
 const CHART_WIDTH = 1200;
-const PADDING = 20;
 
 function App() {
   const [selectedInstitutes, setSelectedInstitutes] = useState(institutes);
@@ -25,7 +24,6 @@ function App() {
       <RecordCreationChart
         height={CHART_HEIGHT}
         width={CHART_WIDTH}
-        padding={PADDING}
         healthRecords={healthRecords}
         institutes={selectedInstitutes}
       />

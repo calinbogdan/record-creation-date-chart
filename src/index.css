@@ -1,8 +1,6 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -14,48 +12,6 @@ body {
   user-select: none;
 }
 
-.legend {
-  font-size: 0.75em;
-  overflow: visible;
-}
-
-.legend-content {
-  display: inline-block;
-  padding: 6px;
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.legend-current-date {
-  color: white;
-  margin: 2px;
-}
-
-.legend-institute span{
-  margin: 0px 4px;
-  color: white;
-}
-
-.indicator-container {
-  overflow: visible;
-}
-
-.indicator {
-  font: 12px sans-serif;
-  background: black;
-  color: white;
-  padding: 2px 5px;
-  position: absolute;
-}
-
-.time.indicator {
-  transform: translateX(-50%);
-  margin-top: 7px;
-}
-
-.records.indicator {
-  transform: translateX(-100%) translateX(-7px) translateY(-50%);
-}
 
 .canvas {
   margin-left: 25px

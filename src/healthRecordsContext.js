@@ -11,9 +11,12 @@ function useStackedData() {
 
   useEffect(() => {
     setStackedData(
-      stack().keys(institutes.map(({ id }) => id))(
-        Object.values(groupedRecords)
-      )
+      stack()
+        .keys(institutes.map(({ id }) => id))(Object.values(groupedRecords))
+        .map((array, index) => {
+          array.instituteData = institutes[index];
+          return array;
+        })
     );
   }, [groupedRecords, institutes]);
 
@@ -28,9 +31,7 @@ function useHealthRecords() {
     setFilteredRecords(
       healthRecords
         .filter(healthRecord =>
-          institutes
-            .map(({ id }) => id)
-            .includes(healthRecord.institute_id)
+          institutes.map(({ id }) => id).includes(healthRecord.institute_id)
         )
         .sort(
           (firstRecord, secondRecord) =>
@@ -66,30 +67,29 @@ function useRecordsGroupedByDay() {
           healthRecord => healthRecord.institute_id
         ),
         ([date, recordsByInstitutes]) => ({ date, recordsByInstitutes })
-      ).map(({ date, recordsByInstitutes }) => {
-        const totalRecords = sum(
-          Array.from(recordsByInstitutes, ([_, records]) => records.length)
-        );
-        return {
-          date,
-          totalRecords,
-          ...institutes
-            .map(({ id }) => [
-              id,
-              recordsByInstitutes.get(id)?.length ?? 0
-            ]) // if there's no record for the given institute in that day, we're 'defaulting' it to 0
-            .reduce(
-              (base, [instituteId, recordsCount]) => ({
-                ...base,
-                [instituteId]: recordsCount
-              }),
-              {}
-            )
-        };
-      }).reduce((previous, current) => {
-        previous[current.date] = current;
-        return previous;
-      }, {})
+      )
+        .map(({ date, recordsByInstitutes }) => {
+          const totalRecords = sum(
+            Array.from(recordsByInstitutes, ([_, records]) => records.length)
+          );
+          return {
+            date,
+            totalRecords,
+            ...institutes
+              .map(({ id }) => [id, recordsByInstitutes.get(id)?.length ?? 0]) // if there's no record for the given institute in that day, we're 'defaulting' it to 0
+              .reduce(
+                (base, [instituteId, recordsCount]) => ({
+                  ...base,
+                  [instituteId]: recordsCount
+                }),
+                {}
+              )
+          };
+        })
+        .reduce((previous, current) => {
+          previous[current.date] = current;
+          return previous;
+        }, {})
     );
   }, [healthRecords, institutes]);
 

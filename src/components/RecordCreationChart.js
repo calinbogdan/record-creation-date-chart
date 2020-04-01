@@ -5,21 +5,21 @@ import ChartDimensionsContext from '../chartDimensionsContext';
 import RecordsScaleContext from '../recordsScaleContext';
 import { TimeScaleProvider } from '../timeScaleContext';
 
+const CANVAS_PADDING = 20;
 
 const RecordCreationChart = ({
   healthRecords,
   institutes,
   width,
-  height,
-  padding }) => {
+  height }) => {
   return <HealthRecordsContext.Provider value={{ healthRecords, institutes }}>
     <ChartDimensionsContext.Provider value={{
-      height: height - 2 * padding,
-      width: width - 2 * padding
+      height: height - 2 * CANVAS_PADDING,
+      width: width - 2 * CANVAS_PADDING
     }}>
       <TimeScaleProvider>
         <RecordsScaleContext.Provider>
-          <Canvas height={height} width={width} padding={padding} />
+          <Canvas height={height} width={width} padding={CANVAS_PADDING} />
         </RecordsScaleContext.Provider>
       </TimeScaleProvider>
     </ChartDimensionsContext.Provider>

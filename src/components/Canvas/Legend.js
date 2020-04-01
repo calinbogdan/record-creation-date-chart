@@ -1,18 +1,37 @@
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 import TimeScaleContext from "../../timeScaleContext";
-import HealthRecordsContext, { useRecordsGroupedByDay } from "../../healthRecordsContext";
+import HealthRecordsContext, {
+  useRecordsGroupedByDay
+} from "../../healthRecordsContext";
 import { timeFormat } from "d3";
-
+import styled from "styled-components";
 
 const formatTimeForLegend = timeFormat("%d %b %Y");
-
-const COLORS = ["red", "yellow", "orange", "green", "blue"];
 
 const Circle = ({ radius, color }) => (
   <svg height={radius * 2} width={radius * 2}>
     <circle fill={color} cx={radius} cy={radius} r={radius} />
   </svg>
 );
+
+const LegendWrapper = styled.g`
+  font-size: 0.75em;
+  overflow: visible;
+`;
+
+const LegendContent = styled.div`
+  display: inline-block;
+  padding: 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.5);
+  * {
+    color: white;
+  }
+`;
+
+const LegendCurrentDate = styled.div`
+  margin: 2px;
+`;
 
 const Legend = ({ x, y }) => {
   const { timeScale } = useContext(TimeScaleContext);
@@ -21,26 +40,27 @@ const Legend = ({ x, y }) => {
   const records = useRecordsGroupedByDay();
 
   const day = formatTimeForLegend(timeScale.invert(x));
-  const dayData = records[day];  
+  const dayData = records[day];
 
   return (
-    <g className="legend" transform={`translate(${x}, ${y})`}>
+    <LegendWrapper transform={`translate(${x}, ${y})`}>
       <foreignObject transform="translate(10, 10)" height={200} width={150}>
-        <div className="legend-content">
-          <div className="legend-current-date">
+        <LegendContent>
+          <LegendCurrentDate>
             {formatTimeForLegend(timeScale.invert(x))}
-          </div>
+          </LegendCurrentDate>
           {institutes.map((institute, index) => {
             return (
               <div key={index} className="legend-institute">
-                <Circle radius={4.5} color={COLORS[index]}/>
-                <span>{`${institute.abbreviation}: ${dayData?.[institute.id] ?? 0}`}</span>
+                <Circle radius={4.5} color={institute.color} />
+                <span>{`${institute.abbreviation}: ${dayData?.[institute.id] ??
+                  0}`}</span>
               </div>
             );
           })}
-        </div>
+        </LegendContent>
       </foreignObject>
-    </g>
+    </LegendWrapper>
   );
 };
 
