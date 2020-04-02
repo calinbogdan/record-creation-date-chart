@@ -91,9 +91,24 @@ const InstituteSelector = ({
     mapInstituteArray(institutesArray)
   );
 
+  const onMouseClickOutside = useCallback(event => {
+    if (!selectorRef.current?.contains(event.target)) {
+      setOpen(false);
+    }
+  }, [selectorRef, setOpen]);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", onMouseClickOutside);
+    return () => document.removeEventListener("mousedown", onMouseClickOutside);
+  }, [onMouseClickOutside]);
+
   useEffect(() => {
     setInstitutes(mapInstituteArray(institutesArray));
   }, [institutesArray]);
+
+  useEffect(() => {
+    onSelectionChanged(onlySelected(institutes));
+  }, [institutes, onSelectionChanged]);
 
   const selectAllListener = useCallback(() => {
     setInstitutes(mapSelected(institutes, true));
@@ -102,10 +117,6 @@ const InstituteSelector = ({
   const deselectAllListener = useCallback(() => {
     setInstitutes(mapSelected(institutes, false));
   }, [institutes]);
-
-  useEffect(() => {
-    onSelectionChanged(onlySelected(institutes));
-  }, [institutes, onSelectionChanged]);
 
   return (
     <Wrapper ref={selectorRef}>
