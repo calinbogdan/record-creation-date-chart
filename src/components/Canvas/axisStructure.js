@@ -50,7 +50,10 @@ const Axes = ({ height, width }) => {
     select(yAxisRef.current).call(
       axisLeft(recordsScale)
         .tickSize(5)
-        .tickValues(recordsScale.ticks().filter(tick => Number.isInteger(tick)) // don't show fractionary ticks
+        .tickValues(
+          recordsScale.ticks()
+          .filter(tick => Number.isInteger(tick))
+        )
         .tickFormat(format("~s"))
     );
   }, [height, recordsScale]);
