@@ -23,6 +23,17 @@ function useStackedData() {
   return stackedData;
 }
 
+function useDaysWithRecords() {
+  const [daysWithRecords, setDaysWithRecords] = useState([]);
+  const records = useHealthRecords();
+
+  useEffect(() => {
+    setDaysWithRecords([...new Set(records.map(record => record.createdon))]);
+  }, [records]);
+
+  return daysWithRecords;
+}
+
 function useHealthRecords() {
   const { healthRecords, institutes } = useContext(HealthRecordsContext);
   const [filteredRecords, setFilteredRecords] = useState([]);
@@ -59,7 +70,7 @@ function useRecordsGroupedByDay() {
   return groupedRecords;
 }
 
-export { useRecordsGroupedByDay, useHealthRecords, useStackedData };
+export { useRecordsGroupedByDay, useHealthRecords, useStackedData, useDaysWithRecords };
 export default HealthRecordsContext;
 
 /*

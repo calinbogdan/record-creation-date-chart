@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useStackedData } from "../../contexts/healthRecordsContext";
 import TimeScaleContext from "../../contexts/timeScaleContext";
 import { useRecordsScale } from "../../contexts/recordsScaleContext";
-import { area } from "d3";
+import { area, curveBasis } from "d3";
 
 const StackedDataChart = () => {
   const { timeScale } = useContext(TimeScaleContext);
@@ -12,7 +12,8 @@ const StackedDataChart = () => {
   const areaFrom = area()
     .x(d => timeScale(new Date(d.data.date)))
     .y0(d => recordsScale(d["0"]))
-    .y1(d => recordsScale(d["1"]));
+    .y1(d => recordsScale(d["1"]))
+    .curve(curveBasis);
 
   return (
     <g className="graphs">

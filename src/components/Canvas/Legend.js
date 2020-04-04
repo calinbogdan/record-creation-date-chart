@@ -37,14 +37,12 @@ const InstituteRecordsAmount = styled.span`
   margin: 0px 4px;
 `;
 
-const Legend = ({ x, y }) => {
+const Legend = ({ x, y, scale }) => {
   const { timeScale } = useContext(TimeScaleContext);
   const { institutes } = useContext(HealthRecordsContext);
 
   const records = useRecordsGroupedByDay();
-
-  const day = formatTimeForLegend(timeScale.invert(x));
-  const dayData = records[day];
+  const dayData = records[scale(x)];
 
   return (
     <LegendWrapper transform={`translate(${x}, ${y})`}>
