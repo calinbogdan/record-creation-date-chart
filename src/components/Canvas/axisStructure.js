@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useRef } from "react";
-import { select, axisBottom, axisLeft, format, formatPrefix } from "d3";
+import { select, axisBottom, axisLeft, format } from "d3";
 
 import TimeScaleContext from "../../contexts/timeScaleContext";
 import { useRecordsScale } from "../../contexts/recordsScaleContext";

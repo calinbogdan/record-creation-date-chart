@@ -20,6 +20,7 @@ function useRecordsScale() {
       scaleLinear()
         .domain([0, max(Object.values(recordsPerDay), recordsDay => recordsDay.totalRecords)])
         .range([height, 0])
+        .nice()
     );
   }, [recordsPerDay, height])
 

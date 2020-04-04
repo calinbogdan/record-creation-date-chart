@@ -5,7 +5,7 @@ import React, {
   useRef,
   useEffect,
 } from "react";
-import { timeFormat, scaleQuantize, scaleThreshold } from "d3";
+import { timeFormat, scaleThreshold } from "d3";
 
 import Legend from "./Legend";
 import { TimeIndicator, RecordsCountIndicator } from "./indicators";
