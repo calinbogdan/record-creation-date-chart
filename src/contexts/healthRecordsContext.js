@@ -30,7 +30,7 @@ function useHealthRecords() {
   useEffect(() => {
     setFilteredRecords(
       healthRecords
-        .filter(healthRecord =>
+        .filter((healthRecord) =>
           institutes.map(({ id }) => id).includes(healthRecord.institute_id)
         )
         .sort(
@@ -44,6 +44,24 @@ function useHealthRecords() {
   return filteredRecords;
 }
 
+
+function useRecordsGroupedByDay() {
+  const [groupedRecords, setGroupedRecords] = useState([]);
+  const healthRecords = useHealthRecords();
+  const { institutes } = useContext(HealthRecordsContext);
+
+  useEffect(() => {
+    setGroupedRecords(
+      getCumulativeByDay(healthRecords, institutes)
+    );
+  }, [healthRecords, institutes]);
+
+  return groupedRecords;
+}
+
+export { useRecordsGroupedByDay, useHealthRecords, useStackedData };
+export default HealthRecordsContext;
+
 /*
     Basically, what the following algorithm does is grouping the records by day, then by institute.
     The aim is to have an array like the following: 
@@ -53,48 +71,57 @@ function useHealthRecords() {
       ...
     ]
 */
-function useRecordsGroupedByDay() {
-  const [groupedRecords, setGroupedRecords] = useState([]);
-  const healthRecords = useHealthRecords();
-  const { institutes } = useContext(HealthRecordsContext);
+function getCumulativeByDay(healthRecords, institutes) {
+  return Array.from(
+    group(
+      healthRecords,
+      (healthRecord) => healthRecord.createdon,
+      (healthRecord) => healthRecord.institute_id
+    ),
+    ([date, recordsByInstitutes]) => ({ date, recordsByInstitutes })
+  )
+    .map(({ date, recordsByInstitutes }) => {
+      const totalRecords = sum(
+        Array.from(recordsByInstitutes, ([_, records]) => records.length)
+      );
+      return {
+        date,
+        totalRecords,
+        ...institutes
+          .map(({ id }) => [id, recordsByInstitutes.get(id)?.length ?? 0]) // if there's no record for the given institute in that day, we're 'defaulting' it to 0
+          .reduce(
+            (base, [instituteId, recordsCount]) => ({
+              ...base,
+              [instituteId]: recordsCount,
+            }),
+            {}
+          ),
+      };
+    })
+    .reduce((base, current) => {
+      const keysSoFar = Object.keys(base);
 
-  useEffect(() => {
-    setGroupedRecords(
-      Array.from(
-        group(
-          healthRecords,
-          healthRecord => healthRecord.createdon,
-          healthRecord => healthRecord.institute_id
-        ),
-        ([date, recordsByInstitutes]) => ({ date, recordsByInstitutes })
-      )
-        .map(({ date, recordsByInstitutes }) => {
-          const totalRecords = sum(
-            Array.from(recordsByInstitutes, ([_, records]) => records.length)
-          );
-          return {
-            date,
-            totalRecords,
-            ...institutes
-              .map(({ id }) => [id, recordsByInstitutes.get(id)?.length ?? 0]) // if there's no record for the given institute in that day, we're 'defaulting' it to 0
-              .reduce(
-                (base, [instituteId, recordsCount]) => ({
-                  ...base,
-                  [instituteId]: recordsCount
-                }),
-                {}
-              )
-          };
-        })
-        .reduce((previous, current) => {
-          previous[current.date] = current;
-          return previous;
-        }, {})
-    );
-  }, [healthRecords, institutes]);
+      if (keysSoFar.length === 0) {
+        base[current.date] = current;
+        return base;
+      }
 
-  return groupedRecords;
+      const lastKey = keysSoFar[keysSoFar.length - 1];
+      const lastRecord = base[lastKey];
+
+      const nextRecord = {};
+      Object.keys(lastRecord).forEach((key) => {
+        if (key !== "date") {
+          nextRecord[key] = lastRecord[key] + current[key];
+        } else {
+          nextRecord[key] = current[key];
+        }
+      });
+
+      return {
+        ...base,
+        [current.date]: nextRecord,
+      };
+    }, {});
 }
 
-export { useRecordsGroupedByDay, useHealthRecords, useStackedData };
-export default HealthRecordsContext;
