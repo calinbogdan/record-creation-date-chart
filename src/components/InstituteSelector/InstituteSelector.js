@@ -11,7 +11,7 @@ function mapInstituteArray(institutes) {
     id: institute.instituteId,
     name: institute.instituteName,
     abbreviation: institute.instituteAbbreviation,
-    selected: false,
+    selected: true,
     color: institute.color
   }));
 }
